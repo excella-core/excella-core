@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="filecomment_context" deleted="false" description="作成済み Java ファイルのコメント" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.filecomment" name="filecomment">/*************************************************************************&#13;
+ *&#13;
+ * Copyright ${year} by bBreak Systems.&#13;
+ *&#13;
+ * ExCella Core - ExcelファイルをJavaから利用するための共通基盤&#13;
+ *&#13;
+ * $$Id$$&#13;
+ * $$Revision$$&#13;
+ *&#13;
+ * This file is part of ExCella Core.&#13;
+ *&#13;
+ * ExCella Core is free software: you can redistribute it and/or modify&#13;
+ * it under the terms of the GNU Lesser General Public License version 3&#13;
+ * only, as published by the Free Software Foundation.&#13;
+ *&#13;
+ * ExCella Core is distributed in the hope that it will be useful,&#13;
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of&#13;
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#13;
+ * GNU Lesser General Public License version 3 for more details&#13;
+ * (a copy is included in the COPYING.LESSER file that accompanied this code).&#13;
+ *&#13;
+ * You should have received a copy of the GNU Lesser General Public License&#13;
+ * version 3 along with ExCella Core.  If not, see&#13;
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0-standalone.html&gt;&#13;
+ * for a copy of the LGPLv3 License.&#13;
+ *&#13;
+ ************************************************************************/</template>
+ <template autoinsert="false" context="typecomment_context" deleted="false" description="Comment for created types" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.typecomment" name="typecomment">/**
+ * TODO: クラスの説明
+ *
+ * @since TODO: 対応バージョン
+ */</template></templates>
