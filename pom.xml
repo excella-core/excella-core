@@ -4,6 +4,20 @@
   <artifactId>excella-core</artifactId>
   <version>2.0-SNAPSHOT</version>
   <name>excella-core</name>
+  <build>
+  	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-surefire-plugin</artifactId>
+			<version>2.17</version>
+			<configuration>
+				<includes>
+            		<include>**/AllTestSuite.java</include>
+          		</includes>
+          	</configuration>
+		</plugin>
+  	</plugins>
+  </build>
   <dependencies>
   	<dependency>
   		<groupId>org.apache.poi</groupId>
