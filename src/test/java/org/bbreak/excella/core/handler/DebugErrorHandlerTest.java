@@ -58,7 +58,7 @@ public class DebugErrorHandlerTest extends WorkbookTest {
         Workbook workbook = getWorkbook();
         Sheet sheet = workbook.getSheetAt( 0);
 
-        String errorFilePath = "c:\\workspace\\oss\\org.excelparser\\tests\\org\\excelparser\\handler\\result";
+        String errorFilePath = "DebugErrorHandlerTest" + System.currentTimeMillis();
         if ( workbook instanceof XSSFWorkbook) {
             errorFilePath += BookController.XSSF_SUFFIX;
         } else {
@@ -99,18 +99,19 @@ public class DebugErrorHandlerTest extends WorkbookTest {
         debugErrorHandler.notifyException( workbook, sheet, new ParseException( sheet.getRow( 0).getCell( 0)));
     }
 
-    @Test
-    public void errorTest2() {
-
-        Workbook workbook = getWorkbook();
-        Sheet sheet = workbook.getSheetAt( 0);
-
-        // ===============================================
-        // notifyException( Workbook workbook, Sheet sheet, ParseException exception) --> NG
-        // ===============================================
-        DebugErrorHandler debugErrorHandler = new DebugErrorHandler();
-        debugErrorHandler.setErrorFilePath( "g:\\result");
-        debugErrorHandler.notifyException( workbook, sheet, new ParseException( sheet.getRow( 0).getCell( 0)));
-
-    }
+    // 存在しないファイルパスを指定するテストだが、環境によっては存在する可能性があるため、コメントアウト
+//    @Test
+//    public void errorTest2() {
+//
+//        Workbook workbook = getWorkbook();
+//        Sheet sheet = workbook.getSheetAt( 0);
+//
+//        // ===============================================
+//        // notifyException( Workbook workbook, Sheet sheet, ParseException exception) --> NG
+//        // ===============================================
+//        DebugErrorHandler debugErrorHandler = new DebugErrorHandler();
+//        debugErrorHandler.setErrorFilePath( "g:\\result");
+//        debugErrorHandler.notifyException( workbook, sheet, new ParseException( sheet.getRow( 0).getCell( 0)));
+//
+//    }
 }
