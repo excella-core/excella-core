@@ -1,0 +1,19 @@
+Apache POI
+Copyright 2001-2007 The Apache Software Foundation
+
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).
+
+
+Unit testing support is provided by JUnit, under the 
+Common Public License Version 1.0: 
+	http://www.opensource.org/licenses/cpl.php
+See http://www.junit.org/
+
+
+The Office Open XML support had additional dependencies, with their 
+own licensing:
+ * XML Beans - http://xmlbeans.apache.org/
+      Apache Licence Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+ * DOM4J - http://www.dom4j.org/
+      BSD Licence - http://www.dom4j.org/license.html
