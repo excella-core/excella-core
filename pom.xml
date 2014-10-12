@@ -16,6 +16,16 @@
           		</includes>
           	</configuration>
 		</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-javadoc-plugin</artifactId>
+		  <configuration>
+		    <source>1.7</source>
+		    <encoding>UTF-8</encoding>
+		    <charset>UTF-8</charset>
+		    <docencoding>UTF-8</docencoding>
+		  </configuration>
+		</plugin>
   	</plugins>
   </build>
   <reporting>
