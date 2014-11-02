@@ -4,6 +4,13 @@
   <artifactId>excella-core</artifactId>
   <version>2.0</version>
   <name>excella-core</name>
+  <distributionManagement>
+  	<repository>
+  		<id>deploy-local</id>
+  		<name>deployLocal</name>
+  		<url>file://${basedir}/../excella-core.github.io/maven2</url>
+  	</repository>
+  </distributionManagement>
   <build>
   	<plugins>
 		<plugin>
