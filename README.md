@@ -33,8 +33,20 @@ http://sourceforge.jp/projects/excella-core/
   障害・損害・不具合等に関しても、株式会社ビーブレイクシステムズは
   一切の責任を負いません。各自の責任においてご使用ください。
 
+4. Maven repository
+-------------
+mavenの依存ライブラリとして追加する場合、pom.xmlに下記のリポジトリを追加してください。
+```xml
+  <repositories>
+    <repository>
+	  <id>excella.bbreak.org</id>
+      <name>bBreak Systems Excella</name>
+      <url>http://excella-core.github.io/maven2/</url>    
+    </repository>
+  </repositories>
+```
 
-4. 更新履歴  
+5. 更新履歴  
 -------------
 * 2014/08/18 Version 1.8 リリース
 * 2013/03/18 Version 1.7 リリース
