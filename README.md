@@ -6,9 +6,6 @@ Excella Core
 
   ExCella CoreはExcelファイルをJavaから利用するための共通基盤です。
 
-  最新版、各種ドキュメントは以下のサイトで公開しています。
-  http://sourceforge.jp/projects/excella-core/
-
   ExCella Coreは株式会社ビーブレイクシステムズが
   作成したオープンソースソフトウェアです。
 
