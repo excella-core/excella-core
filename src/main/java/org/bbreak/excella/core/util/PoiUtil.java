@@ -118,7 +118,7 @@ public final class PoiUtil {
                     // 式を評価
                     CellValue cellValue = evaluator.evaluate( cell);
                     int cellType = cellValue.getCellType();
-                    // 表か結果の型で分岐
+                    // 評価結果の型で分岐
                     switch ( cellType) {
                         case Cell.CELL_TYPE_BLANK:
                             break;
