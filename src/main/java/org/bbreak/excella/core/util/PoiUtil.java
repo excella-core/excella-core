@@ -527,17 +527,11 @@ public final class PoiUtil {
                 copyCell( fromCell, cell);
 
                 // 元より大きい場合のみ列幅コピー
-                try {
-                    int fromColumnWidth = baseSheet.getColumnWidth( j);
-                    int toColumnWidth = toSheet.getColumnWidth( j + columnNumOffset);
+                int fromColumnWidth = baseSheet.getColumnWidth( j);
+                int toColumnWidth = toSheet.getColumnWidth( j + columnNumOffset);
 
-                    if ( toColumnWidth < fromColumnWidth) {
-                        toSheet.setColumnWidth( j + columnNumOffset, baseSheet.getColumnWidth( j));
-                    }
-                } catch ( IndexOutOfBoundsException e) {
-                    // TODO 不具合解消され次第修正
-                    // XSSF場合すべてデフォルト幅でcloneSheetすると、getColumnWidthでIndexOutOfBoundsExceptionが発生してしまう不具合対応
-                    continue;
+                if ( toColumnWidth < fromColumnWidth) {
+                    toSheet.setColumnWidth( j + columnNumOffset, baseSheet.getColumnWidth( j));
                 }
             }
         }
