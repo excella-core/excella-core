@@ -397,7 +397,8 @@ public final class PoiUtil {
             }
 
             // スタイル
-            if ( fromCell.getCellStyle() != null) {
+            if ( fromCell.getCellStyle() != null
+                     && fromCell.getSheet().getWorkbook().equals(toCell.getSheet().getWorkbook())) {
                 toCell.setCellStyle( fromCell.getCellStyle());
             }
 
