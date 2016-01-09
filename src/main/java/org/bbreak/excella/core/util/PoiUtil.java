@@ -118,7 +118,7 @@ public final class PoiUtil {
                     // 式を評価
                     CellValue cellValue = evaluator.evaluate( cell);
                     int cellType = cellValue.getCellType();
-                    // 表か結果の型で分岐
+                    // 評価結果の型で分岐
                     switch ( cellType) {
                         case Cell.CELL_TYPE_BLANK:
                             break;
@@ -528,30 +528,18 @@ public final class PoiUtil {
                 copyCell( fromCell, cell);
 
                 // 元より大きい場合のみ列幅コピー
-                try {
-                    int fromColumnWidth = baseSheet.getColumnWidth( j);
-                    int toColumnWidth = toSheet.getColumnWidth( j + columnNumOffset);
+                int fromColumnWidth = baseSheet.getColumnWidth( j);
+                int toColumnWidth = toSheet.getColumnWidth( j + columnNumOffset);
 
-                    if ( toColumnWidth < fromColumnWidth) {
-                        toSheet.setColumnWidth( j + columnNumOffset, baseSheet.getColumnWidth( j));
-                    }
-                } catch ( IndexOutOfBoundsException e) {
-                    // TODO 不具合解消され次第修正
-                    // XSSF場合すべてデフォルト幅でcloneSheetすると、getColumnWidthでIndexOutOfBoundsExceptionが発生してしまう不具合対応
-                    continue;
+                if ( toColumnWidth < fromColumnWidth) {
+                    toSheet.setColumnWidth( j + columnNumOffset, baseSheet.getColumnWidth( j));
                 }
             }
         }
 
         if ( tmpSheet != null) {
             // 一時シート削除
-            if ( !(fromWorkbook instanceof XSSFWorkbook)) {
-                // TODO 不具合解消され次第修正
-                // XSSFの場合、不具合のため一時シートは削除しない
-                fromWorkbook.removeSheetAt( fromWorkbook.getSheetIndex( tmpSheet));
-            } else {
-                clearRange( tmpSheet, rangeAddress);
-            }
+            fromWorkbook.removeSheetAt( fromWorkbook.getSheetIndex( tmpSheet));
         } else if ( clearFromRange) {
             // 一時シート未使用の場合、元をクリアする
             clearRange( fromSheet, rangeAddress);
