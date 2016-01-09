@@ -232,5 +232,10 @@ public class CellClone implements Cell {
 	public void setHyperlink(Hyperlink link) {
 		throw new IllegalStateException("CellClone is not support setHyperlink(Hyperlink link).");
 	}
+	
+	@Override
+	public void removeHyperlink() {
+        throw new IllegalStateException("CellClone is not support removeHyperlink().");
+	}
 
 }
