@@ -30,10 +30,12 @@ package org.bbreak.excella.core.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -57,7 +59,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.helpers.ColumnHelper;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCell;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCol;
@@ -749,7 +750,7 @@ public final class PoiUtil {
         int toColumnIndex = rangeAddress.getLastColumn();
 
         // セルの削除、行の削除
-        Set<Row> removeRowSet = new HashSet<Row>();
+        List<Row> removeRowList = new ArrayList<Row>();
         Iterator<Row> rowIterator = sheet.rowIterator();
         while ( rowIterator.hasNext()) {
             Row row = rowIterator.next();
@@ -768,10 +769,10 @@ public final class PoiUtil {
                 }
             }
             if ( row.getLastCellNum() == -1) {
-                removeRowSet.add( row);
+                removeRowList.add( row);
             }
         }
-        for ( Row row : removeRowSet) {
+        for ( Row row : removeRowList) {
             sheet.removeRow( row);
         }
     }
