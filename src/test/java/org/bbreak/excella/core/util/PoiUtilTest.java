@@ -51,6 +51,7 @@ import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bbreak.excella.core.BookController;
 import org.bbreak.excella.core.CellClone;
+import org.bbreak.excella.core.CoreTestUtil;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.test.util.CheckException;
 import org.bbreak.excella.core.test.util.TestUtil;
@@ -317,7 +318,7 @@ public class PoiUtilTest extends WorkbookTest {
         if ( workbook instanceof XSSFWorkbook) {
             extension = BookController.XSSF_SUFFIX;
         }
-        PoiUtil.writeBook( workbook, "PoiUtilTest" + System.currentTimeMillis() + extension);
+        PoiUtil.writeBook( workbook, CoreTestUtil.getTestOutputDir() + "PoiUtilTest" + System.currentTimeMillis() + extension);
     }
 
     @Test

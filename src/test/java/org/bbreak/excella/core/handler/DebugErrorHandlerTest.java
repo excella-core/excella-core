@@ -31,6 +31,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bbreak.excella.core.BookController;
+import org.bbreak.excella.core.CoreTestUtil;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.exception.ParseException;
 import org.junit.Assert;
@@ -58,7 +59,7 @@ public class DebugErrorHandlerTest extends WorkbookTest {
         Workbook workbook = getWorkbook();
         Sheet sheet = workbook.getSheetAt( 0);
 
-        String errorFilePath = "DebugErrorHandlerTest" + System.currentTimeMillis();
+        String errorFilePath = CoreTestUtil.getTestOutputDir() + "DebugErrorHandlerTest" + System.currentTimeMillis();
         if ( workbook instanceof XSSFWorkbook) {
             errorFilePath += BookController.XSSF_SUFFIX;
         } else {
