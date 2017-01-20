@@ -450,7 +450,7 @@ public final class PoiUtil {
             baseSheet = tmpSheet;
             
             int lastColNum = getLastColNum(fromSheet);
-            for(int i = 0; i < lastColNum; i++){
+            for(int i = 0; i <= lastColNum; i++){
             	tmpSheet.setColumnWidth(i, fromSheet.getColumnWidth(i));
             }
 
