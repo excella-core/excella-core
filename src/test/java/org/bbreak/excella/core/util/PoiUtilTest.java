@@ -40,6 +40,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -78,7 +79,6 @@ public class PoiUtilTest extends WorkbookTest {
 
         Workbook workbook = getWorkbook();
         Sheet sheet_1 = workbook.getSheetAt( 0);
-        Sheet sheet_2 = workbook.getSheetAt( 1);
 
         Date expectedDate = DateFormat.getDateInstance().parse( "2009/4/16");
         String expectedString = "あああ";
@@ -255,12 +255,6 @@ public class PoiUtilTest extends WorkbookTest {
         // CELL_TYPE_FORMULA -> CELL_TYPE_BLANK
         cellValue = PoiUtil.getCellValue( sheet_1, 12, 0);
         assertEquals( new Double( 0.0), cellValue);
-        
-        // ===============================================
-        // prepareCloneSheet( Sheet sheet)
-        // ===============================================
-        // prepareCloneSheet
-        PoiUtil.prepareCloneSheet( sheet_2);
 
         // ===============================================
         // crossRangeAddress( CellRangeAddress baseAddress, CellRangeAddress targetAddress)
@@ -271,7 +265,7 @@ public class PoiUtilTest extends WorkbookTest {
         // ---重なっている場合（基準範囲と対象範囲が完全一致）---
         CellRangeAddress targetAddress1 = new CellRangeAddress( 2, 3, 2, 3);
         assertTrue( PoiUtil.crossRangeAddress( baseAddress, targetAddress1));
-        
+
         // ---重なっている場合（基準範囲と対象範囲が部分一致）---
         // 対象範囲が上側にはみ出している場合
         CellRangeAddress targetAddress2 = new CellRangeAddress( 1, 2, 2, 3);
@@ -283,9 +277,9 @@ public class PoiUtilTest extends WorkbookTest {
         CellRangeAddress targetAddress4 = new CellRangeAddress( 2, 3, 1, 2);
         assertTrue( PoiUtil.crossRangeAddress( baseAddress, targetAddress4));
         // 対象範囲が右側にはみ出している場合
-        CellRangeAddress targetAddress5 = new CellRangeAddress( 2, 3, 3, 4 );
+        CellRangeAddress targetAddress5 = new CellRangeAddress( 2, 3, 3, 4);
         assertTrue( PoiUtil.crossRangeAddress( baseAddress, targetAddress5));
-        
+
         // ---重なっていない場合（基準範囲と対象範囲の領域が別々に存在）---
         // 対象範囲が上側に存在する場合
         CellRangeAddress targetAddress6 = new CellRangeAddress( 0, 1, 2, 3);
@@ -310,7 +304,7 @@ public class PoiUtilTest extends WorkbookTest {
         assertFalse( PoiUtil.containCellRangeAddress( rangeAddress1, rangeAddress2));
         // 含まれてている
         assertTrue( PoiUtil.containCellRangeAddress( rangeAddress1, rangeAddress3));
-        
+
         // ===============================================
         // writeBook( Workbook workbook, String filename)
         // ===============================================
@@ -632,12 +626,12 @@ public class PoiUtilTest extends WorkbookTest {
         }
 
         // No.15 コピー範囲を削除する（一時シートあり）
-        copyFrom1 = new CellClone(sheet_2.getRow( 55).getCell( 0));
-        copyFrom2 = new CellClone(sheet_2.getRow( 55).getCell( 1));
-        copyFrom3 = new CellClone(sheet_2.getRow( 55).getCell( 2));
-        copyFrom4 = new CellClone(sheet_2.getRow( 56).getCell( 0));
-        copyFrom5 = new CellClone(sheet_2.getRow( 56).getCell( 1));
-        copyFrom6 = new CellClone(sheet_2.getRow( 56).getCell( 2));
+        copyFrom1 = new CellClone( sheet_2.getRow( 55).getCell( 0));
+        copyFrom2 = new CellClone( sheet_2.getRow( 55).getCell( 1));
+        copyFrom3 = new CellClone( sheet_2.getRow( 55).getCell( 2));
+        copyFrom4 = new CellClone( sheet_2.getRow( 56).getCell( 0));
+        copyFrom5 = new CellClone( sheet_2.getRow( 56).getCell( 1));
+        copyFrom6 = new CellClone( sheet_2.getRow( 56).getCell( 2));
 
         PoiUtil.copyRange( sheet_2, new CellRangeAddress( 55, 56, 0, 2), sheet_2, 56, 1, true);
         assertNull( sheet_2.getRow( 55).getCell( 0));
@@ -678,7 +672,7 @@ public class PoiUtilTest extends WorkbookTest {
             System.out.println( ex.getCheckMessagesToString());
             fail();
         }
-        
+
         // ===============================================
         // insertRangeRight( Sheet sheet, CellRangeAddress rangeAddress)
         // ===============================================
@@ -802,12 +796,12 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_4.getRow( 15).getCell( 0));
 
         // ===============================================
-        // setHyperlink(  Cell cell, int type, String address)
+        // setHyperlink( Cell cell, int type, String address)
         // ===============================================
         // No.26 setHyperlink
         Cell cellHyperlink = sheet_5.getRow( 0).getCell( 0);
         String address = "http://sourceforge.jp/projects/excella-core/";
-        PoiUtil.setHyperlink( cellHyperlink, Hyperlink.LINK_URL, address);
+        PoiUtil.setHyperlink( cellHyperlink, HyperlinkType.URL, address);
         Hyperlink hyperLink = cellHyperlink.getHyperlink();
         if ( hyperLink instanceof HSSFHyperlink) {
             assertEquals( address, (( HSSFHyperlink) hyperLink).getTextMark());

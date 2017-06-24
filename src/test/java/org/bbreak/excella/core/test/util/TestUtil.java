@@ -76,9 +76,9 @@ public final class TestUtil {
         }
 
         // 型
-        if ( expected.getCellType() != actual.getCellType()) {
-            errors.add( new CheckMessage( "型[" + "セル(" + expected.getRowIndex() + "," + expected.getColumnIndex() + ")" + "]", String.valueOf( expected.getCellType()), String.valueOf( actual
-                .getCellType())));
+        if ( expected.getCellTypeEnum() != actual.getCellTypeEnum()) {
+            errors.add( new CheckMessage( "型[" + "セル(" + expected.getRowIndex() + "," + expected.getColumnIndex() + ")" + "]", String.valueOf( expected.getCellTypeEnum()), String.valueOf( actual
+                .getCellTypeEnum())));
             throw new CheckException( errors);
         }
 
@@ -106,23 +106,23 @@ public final class TestUtil {
         String value = null;
 
         if ( cell != null) {
-            switch ( cell.getCellType()) {
-                case Cell.CELL_TYPE_BLANK:
+            switch ( cell.getCellTypeEnum()) {
+                case BLANK:
                     value = cell.getStringCellValue();
                     break;
-                case Cell.CELL_TYPE_BOOLEAN:
+                case BOOLEAN:
                     value = String.valueOf( cell.getBooleanCellValue());
                     break;
-                case Cell.CELL_TYPE_ERROR:
+                case ERROR:
                     value = String.valueOf( cell.getErrorCellValue());
                     break;
-                case Cell.CELL_TYPE_NUMERIC:
+                case NUMERIC:
                     value = String.valueOf( cell.getNumericCellValue());
                     break;
-                case Cell.CELL_TYPE_STRING:
+                case STRING:
                     value = cell.getStringCellValue();
                     break;
-                case Cell.CELL_TYPE_FORMULA:
+                case FORMULA:
                     value = cell.getCellFormula();
                 default:
                     value = "";
@@ -182,22 +182,22 @@ public final class TestUtil {
             sb.append( "DataFormatString=").append( cellStyle.getDataFormatString()).append( ",");
             sb.append( "Hidden=").append( cellStyle.getHidden()).append( ",");
             sb.append( "Locked=").append( cellStyle.getLocked()).append( ",");
-            sb.append( "Alignment=").append( cellStyle.getAlignment()).append( ",");
+            sb.append( "Alignment=").append( cellStyle.getAlignmentEnum()).append( ",");
             sb.append( "WrapText=").append( cellStyle.getWrapText()).append( ",");
-            sb.append( "VerticalAlignment=").append( cellStyle.getVerticalAlignment()).append( ",");
+            sb.append( "VerticalAlignment=").append( cellStyle.getVerticalAlignmentEnum()).append( ",");
             sb.append( "Rotation=").append( cellStyle.getRotation()).append( ",");
             sb.append( "Indention=").append( cellStyle.getIndention()).append( ",");
-            sb.append( "BorderLeft=").append( cellStyle.getBorderLeft()).append( ",");
-            sb.append( "BorderRight=").append( cellStyle.getBorderRight()).append( ",");
-            sb.append( "BorderTop=").append( cellStyle.getBorderTop()).append( ",");
-            sb.append( "BorderBottom=").append( cellStyle.getBorderBottom()).append( ",");
+            sb.append( "BorderLeft=").append( cellStyle.getBorderLeftEnum()).append( ",");
+            sb.append( "BorderRight=").append( cellStyle.getBorderRightEnum()).append( ",");
+            sb.append( "BorderTop=").append( cellStyle.getBorderTopEnum()).append( ",");
+            sb.append( "BorderBottom=").append( cellStyle.getBorderBottomEnum()).append( ",");
 
             sb.append( "LeftBorderColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getLeftBorderColor())).append( ",");
             sb.append( "RightBorderColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getRightBorderColor())).append( ",");
             sb.append( "TopBorderColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getTopBorderColor())).append( ",");
             sb.append( "BottomBorderColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getBottomBorderColor())).append( ",");
 
-            sb.append( "FillPattern=").append( cellStyle.getFillPattern()).append( ",");
+            sb.append( "FillPattern=").append( cellStyle.getFillPatternEnum()).append( ",");
             sb.append( "FillForegroundColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getFillForegroundColor())).append( ",");
             sb.append( "FillBackgroundColor=").append( getHSSFColorString( ( HSSFWorkbook) workbook, cellStyle.getFillBackgroundColor()));
         }
@@ -211,7 +211,7 @@ public final class TestUtil {
         sb.append( "italic=").append( font.getItalic()).append( ",");
         sb.append( "strikout=").append( font.getStrikeout()).append( ",");
         sb.append( "colorpalette=").append( getHSSFColorString( ( HSSFWorkbook) workbook, font.getColor())).append( ",");
-        sb.append( "boldweight=").append( Integer.toHexString( font.getBoldweight())).append( ",");
+        sb.append( "boldweight=").append( font.getBold()).append( ",");
         sb.append( "supersubscript=").append( Integer.toHexString( font.getTypeOffset())).append( ",");
         sb.append( "underline=").append( Integer.toHexString( font.getUnderline())).append( ",");
         sb.append( "charset=").append( Integer.toHexString( font.getCharSet())).append( ",");
@@ -239,22 +239,22 @@ public final class TestUtil {
             sb.append( "DataFormatString=").append( cellStyle.getDataFormatString()).append( ",");
             sb.append( "Hidden=").append( cellStyle.getHidden()).append( ",");
             sb.append( "Locked=").append( cellStyle.getLocked()).append( ",");
-            sb.append( "Alignment=").append( cellStyle.getAlignment()).append( ",");
+            sb.append( "Alignment=").append( cellStyle.getAlignmentEnum()).append( ",");
             sb.append( "WrapText=").append( cellStyle.getWrapText()).append( ",");
-            sb.append( "VerticalAlignment=").append( cellStyle.getVerticalAlignment()).append( ",");
+            sb.append( "VerticalAlignment=").append( cellStyle.getVerticalAlignmentEnum()).append( ",");
             sb.append( "Rotation=").append( cellStyle.getRotation()).append( ",");
             sb.append( "Indention=").append( cellStyle.getIndention()).append( ",");
-            sb.append( "BorderLeft=").append( cellStyle.getBorderLeft()).append( ",");
-            sb.append( "BorderRight=").append( cellStyle.getBorderRight()).append( ",");
-            sb.append( "BorderTop=").append( cellStyle.getBorderTop()).append( ",");
-            sb.append( "BorderBottom=").append( cellStyle.getBorderBottom()).append( ",");
+            sb.append( "BorderLeft=").append( cellStyle.getBorderLeftEnum()).append( ",");
+            sb.append( "BorderRight=").append( cellStyle.getBorderRightEnum()).append( ",");
+            sb.append( "BorderTop=").append( cellStyle.getBorderTopEnum()).append( ",");
+            sb.append( "BorderBottom=").append( cellStyle.getBorderBottomEnum()).append( ",");
 
             sb.append( "LeftBorderColor=").append( getXSSFColorString( cellStyle.getLeftBorderXSSFColor())).append( ",");
             sb.append( "RightBorderColor=").append( getXSSFColorString( cellStyle.getRightBorderXSSFColor())).append( ",");
             sb.append( "TopBorderColor=").append( getXSSFColorString( cellStyle.getTopBorderXSSFColor())).append( ",");
             sb.append( "BottomBorderColor=").append( getXSSFColorString( cellStyle.getBottomBorderXSSFColor())).append( ",");
 
-            sb.append( "FillPattern=").append( cellStyle.getFillPattern()).append( ",");
+            sb.append( "FillPattern=").append( cellStyle.getFillPatternEnum()).append( ",");
             sb.append( "FillForegroundColor=").append( getXSSFColorString( cellStyle.getFillForegroundXSSFColor())).append( ",");
             sb.append( "FillBackgroundColor=").append( getXSSFColorString( cellStyle.getFillBackgroundXSSFColor()));
         }
@@ -266,8 +266,8 @@ public final class TestUtil {
         if ( color != null) {
             sb.append( "Indexed=").append( color.getIndexed()).append( ",");
             sb.append( "Rgb=");
-            if ( color.getRgb() != null) {
-                for ( byte b : color.getRgb()) {
+            if ( color.getRGB() != null) {
+                for ( byte b : color.getRGB()) {
                     sb.append( String.format( "%02x", b).toUpperCase());
                 }
             }

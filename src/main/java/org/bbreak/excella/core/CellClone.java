@@ -6,11 +6,13 @@ import java.util.Date;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
@@ -33,7 +35,7 @@ public class CellClone implements Cell {
 
 	private CellStyle cellStyle;
 	
-	private int cellType;
+	private CellType cellTypeEnum;
 
 	private Comment cellComment;
 	
@@ -64,44 +66,42 @@ public class CellClone implements Cell {
 		this.rowIndex = cell.getRowIndex();
 		this.columnIndex = cell.getColumnIndex();
 		this.cellStyle = cell.getCellStyle();
-		this.cellType = cell.getCellType();
+		this.cellTypeEnum = cell.getCellTypeEnum();
 		this.cellComment = cell.getCellComment();
 		this.row = cell.getRow();
 		this.sheet = cell.getSheet();
 		this.hyperlink = cell.getHyperlink();
 
-		switch(this.cellType) {
-		case CELL_TYPE_NUMERIC:
-		case CELL_TYPE_FORMULA:
-		case CELL_TYPE_BLANK:
-			this.numericCellValue = cell.getNumericCellValue();
-			this.dateCellValue = cell.getDateCellValue();
-		}
-
-		switch(this.cellType) {
-		case CELL_TYPE_STRING:
-		case CELL_TYPE_FORMULA:
-		case CELL_TYPE_BLANK:
-			this.richStringCellValue = cell.getRichStringCellValue();
-		}
-
-		switch(this.cellType) {
-		case CELL_TYPE_FORMULA:
-		case CELL_TYPE_BLANK:
-		case CELL_TYPE_BOOLEAN:
-			this.booleanCellValue = cell.getBooleanCellValue();
-		}
-
-
-		switch(this.cellType) {
-		case CELL_TYPE_FORMULA:
-			this.cellFormula = cell.getCellFormula();
-		}
-		
-		switch(this.cellType) {
-		case CELL_TYPE_ERROR:
-			errorCellValue = cell.getErrorCellValue();
-		}
+        switch ( this.cellTypeEnum) {
+            case STRING:
+                this.richStringCellValue = cell.getRichStringCellValue();
+                break;
+            case NUMERIC:
+                this.numericCellValue = cell.getNumericCellValue();
+                this.dateCellValue = cell.getDateCellValue();
+                break;
+            case FORMULA:
+                this.numericCellValue = cell.getNumericCellValue();
+                this.dateCellValue = cell.getDateCellValue();
+                this.richStringCellValue = cell.getRichStringCellValue();
+                this.booleanCellValue = cell.getBooleanCellValue();
+                this.cellFormula = cell.getCellFormula();
+                break;
+            case BOOLEAN:
+                this.booleanCellValue = cell.getBooleanCellValue();
+                break;
+            case BLANK:
+                this.numericCellValue = cell.getNumericCellValue();
+                this.dateCellValue = cell.getDateCellValue();
+                this.richStringCellValue = cell.getRichStringCellValue();
+                this.booleanCellValue = cell.getBooleanCellValue();
+                break;
+            case ERROR:
+                errorCellValue = cell.getErrorCellValue();
+                break;
+            default:
+                break;
+        }
 	}
 
 	public CellRangeAddress getArrayFormulaRange() {
@@ -128,8 +128,9 @@ public class CellClone implements Cell {
 		return cellStyle;
 	}
 
+	@Deprecated
 	public int getCellType() {
-		return cellType;
+		return cellTypeEnum.getCode();
 	}
 
 	public int getColumnIndex() {
@@ -237,5 +238,25 @@ public class CellClone implements Cell {
 	public void removeHyperlink() {
         throw new IllegalStateException("CellClone is not support removeHyperlink().");
 	}
+
+    @Override
+    public void setCellType( CellType cellType) {
+        throw new IllegalStateException("CellClone is not support setCellType().");
+    }
+
+    @Override
+    public CellType getCellTypeEnum() {
+        return cellTypeEnum;
+    }
+
+    @Override
+    public CellType getCachedFormulaResultTypeEnum() {
+        throw new IllegalStateException("CellClone is not support getCachedFormulaResultTypeEnum().");
+    }
+
+    @Override
+    public CellAddress getAddress() {
+        return new CellAddress(this);
+    }
 
 }

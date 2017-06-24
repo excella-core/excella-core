@@ -29,19 +29,18 @@ package org.bbreak.excella.core.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFComment;
 import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bbreak.excella.core.BookController;
 import org.bbreak.excella.core.exception.ParseException;
@@ -96,8 +95,8 @@ public class DebugErrorHandler implements ParseErrorHandler {
             XSSFWorkbook xssfWorkbook = ( XSSFWorkbook) workbook;
 
             CellStyle errorCellStyle = xssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColor.ROSE.index);
-            errorCellStyle.setFillPattern( XSSFCellStyle.SOLID_FOREGROUND);
+            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
+            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
             errorCell.setCellStyle( errorCellStyle);
 
             // TODO:コメントをつけたいけど、うまくいかない。。。
@@ -115,8 +114,8 @@ public class DebugErrorHandler implements ParseErrorHandler {
 
             // エラーセルに背景色を設定
             CellStyle errorCellStyle = hssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColor.ROSE.index);
-            errorCellStyle.setFillPattern( HSSFCellStyle.SOLID_FOREGROUND);
+            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
+            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
             errorCell.setCellStyle( errorCellStyle);
 
             // エラーセルにコメントを追加
