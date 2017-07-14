@@ -30,6 +30,7 @@ package org.bbreak.excella.core.tag.excel2java;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.bbreak.excella.core.exception.ParseException;
 
@@ -85,7 +86,7 @@ public abstract class ObjectsPropertyParser {
         }
 
         // 文字列かつ、タグを含むセルの場合は処理対象
-        if ( tagCell.getCellType() == Cell.CELL_TYPE_STRING) {
+        if ( tagCell.getCellTypeEnum() == CellType.STRING) {
             if ( tagCell.getStringCellValue().contains( tag)) {
                 return true;
             }

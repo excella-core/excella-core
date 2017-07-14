@@ -28,6 +28,7 @@
 package org.bbreak.excella.core.tag;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.util.TagUtil;
@@ -85,7 +86,7 @@ public abstract class TagParser<RESULT> {
      */
     public boolean isParse( Sheet sheet, Cell tagCell) throws ParseException {
         // 文字列かつ、タグを含むセルの場合は処理対象
-        if ( tagCell.getCellType() == Cell.CELL_TYPE_STRING) {
+        if ( tagCell.getCellTypeEnum() == CellType.STRING) {
             String cellTag = TagUtil.getTag( tagCell.getStringCellValue());
             if ( tag.equals( cellTag)) {
                 return true;

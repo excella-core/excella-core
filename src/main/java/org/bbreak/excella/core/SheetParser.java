@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.bbreak.excella.core.exception.ParseException;
@@ -175,13 +175,12 @@ public class SheetParser {
                 }
                 
                 cell = row.getCell(columnIdx);
-                if(cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING
-                		&& !strCellValue.equals( cell.getStringCellValue())) {
-                	// 解析後、値が変わっていれば、再帰的に解析する
-                	if( parseCell(sheet, data, sheetData, cell, row, columnIdx)) {
-                		// 終了タグによる終了
-                		return true;
-                	}
+                if ( cell != null && cell.getCellTypeEnum() == CellType.STRING && !strCellValue.equals( cell.getStringCellValue())) {
+                    // 解析後、値が変わっていれば、再帰的に解析する
+                    if ( parseCell( sheet, data, sheetData, cell, row, columnIdx)) {
+                        // 終了タグによる終了
+                        return true;
+                    }
                 }
                 break;
             }

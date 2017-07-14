@@ -41,12 +41,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.SpreadsheetVersion;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -94,16 +96,16 @@ public final class PoiUtil {
         Object value = null;
 
         if ( cell != null) {
-            switch ( cell.getCellType()) {
-                case Cell.CELL_TYPE_BLANK:
+            switch ( cell.getCellTypeEnum()) {
+                case BLANK:
                     break;
-                case Cell.CELL_TYPE_BOOLEAN:
+                case BOOLEAN:
                     value = cell.getBooleanCellValue();
                     break;
-                case Cell.CELL_TYPE_ERROR:
+                case ERROR:
                     value = cell.getErrorCellValue();
                     break;
-                case Cell.CELL_TYPE_NUMERIC:
+                case NUMERIC:
                     // 日付の場合
                     if ( isCellDateFormatted( cell)) {
                         value = cell.getDateCellValue();
@@ -111,22 +113,22 @@ public final class PoiUtil {
                         value = cell.getNumericCellValue();
                     }
                     break;
-                case Cell.CELL_TYPE_STRING:
+                case STRING:
                     value = cell.getStringCellValue();
                     break;
-                case Cell.CELL_TYPE_FORMULA:
+                case FORMULA:
                     FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
                     // 式を評価
                     CellValue cellValue = evaluator.evaluate( cell);
-                    int cellType = cellValue.getCellType();
+                    CellType cellType = cellValue.getCellTypeEnum();
                     // 評価結果の型で分岐
                     switch ( cellType) {
-                        case Cell.CELL_TYPE_BLANK:
+                        case BLANK:
                             break;
-                        case Cell.CELL_TYPE_BOOLEAN:
+                        case BOOLEAN:
                             value = cell.getBooleanCellValue();
                             break;
-                        case Cell.CELL_TYPE_ERROR:
+                        case ERROR:
                             if ( cell instanceof XSSFCell) {
                                 // XSSF形式の場合は、文字列を返却
                                 XSSFCell xssfCell = ( XSSFCell) cell;
@@ -137,7 +139,7 @@ public final class PoiUtil {
                                 value = cell.getErrorCellValue();
                             }
                             break;
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             // 日付の場合
                             if ( isCellDateFormatted( cell)) {
                                 value = cell.getDateCellValue();
@@ -145,10 +147,14 @@ public final class PoiUtil {
                                 value = cell.getNumericCellValue();
                             }
                             break;
-                        case Cell.CELL_TYPE_STRING:
+                        case STRING:
                             value = cell.getStringCellValue();
                             break;
+                        default:
+                            break;
                     }
+                default:
+                    break;
             }
         }
         return value;
@@ -235,10 +241,10 @@ public final class PoiUtil {
      * @return 取得した値
      */
     public static Object getCellValue( Cell cell, Class<?> propertyClass) {
-        if ( cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
+        if ( cell.getCellTypeEnum() == CellType.BLANK) {
             // セルが空
             return null;
-        } else if ( cell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtil.isEmpty( cell.getStringCellValue())) {
+        } else if ( cell.getCellTypeEnum() == CellType.STRING && StringUtil.isEmpty( cell.getStringCellValue())) {
             // セルタイプが文字列で、空の場合はnullを返す
             return null;
         }
@@ -374,24 +380,24 @@ public final class PoiUtil {
         if ( fromCell != null) {
 
             // 値
-            int cellType = fromCell.getCellType();
+            CellType cellType = fromCell.getCellTypeEnum();
             switch ( cellType) {
-                case Cell.CELL_TYPE_BLANK:
+                case BLANK:
                     break;
-                case Cell.CELL_TYPE_FORMULA:
+                case FORMULA:
                     String cellFormula = fromCell.getCellFormula();
                     toCell.setCellFormula( cellFormula);
                     break;
-                case Cell.CELL_TYPE_BOOLEAN:
+                case BOOLEAN:
                     toCell.setCellValue( fromCell.getBooleanCellValue());
                     break;
-                case Cell.CELL_TYPE_ERROR:
+                case ERROR:
                     toCell.setCellErrorValue( fromCell.getErrorCellValue());
                     break;
-                case Cell.CELL_TYPE_NUMERIC:
+                case NUMERIC:
                     toCell.setCellValue( fromCell.getNumericCellValue());
                     break;
-                case Cell.CELL_TYPE_STRING:
+                case STRING:
                     toCell.setCellValue( fromCell.getRichStringCellValue());
                     break;
                 default:
@@ -885,13 +891,13 @@ public final class PoiUtil {
      * @param address ハイパーリンクアドレス
      * @see org.apache.poi.common.usermodel.Hyperlink
      */
-    public static void setHyperlink( Cell cell, int type, String address) {
+    public static void setHyperlink( Cell cell, HyperlinkType hyperlinkType, String address) {
 
         Workbook wb = cell.getRow().getSheet().getWorkbook();
 
         CreationHelper createHelper = wb.getCreationHelper();
 
-        Hyperlink link = createHelper.createHyperlink( type);
+        Hyperlink link = createHelper.createHyperlink( hyperlinkType);
         if ( link instanceof HSSFHyperlink) {
             (( HSSFHyperlink) link).setTextMark( address);
         } else if ( link instanceof XSSFHyperlink) {
@@ -929,7 +935,7 @@ public final class PoiUtil {
                 cell.setCellValue( boolValue);
             }
         } else {
-            cell.setCellType( Cell.CELL_TYPE_BLANK);
+            cell.setCellType( CellType.BLANK);
             cell.setCellStyle( style);
         }
     }
