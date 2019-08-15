@@ -376,6 +376,17 @@ public final class PoiUtil {
      * @param toCell コピー先セル
      */
     public static void copyCell( Cell fromCell, Cell toCell) {
+    	copyCell(fromCell, toCell, true, true);
+    }
+    
+    /**
+     * セルをコピーする。
+     * @param fromCell コピー元セル
+     * @param toCell コピー先セル
+     * @param copyStyle trueの時スタイルのコピーを行う
+     * @param copyComment trueの時コメントのコピーを行う
+     */
+    public static void copyCell( Cell fromCell, Cell toCell, boolean copyStyle, boolean copyComment) {
 
         if ( fromCell != null) {
 
@@ -404,16 +415,27 @@ public final class PoiUtil {
             }
 
             // スタイル
-            if ( fromCell.getCellStyle() != null
-                     && fromCell.getSheet().getWorkbook().equals(toCell.getSheet().getWorkbook())) {
+            if ( canCopyStyle(fromCell,toCell) && copyStyle) {
                 toCell.setCellStyle( fromCell.getCellStyle());
             }
 
             // コメント
-            if ( fromCell.getCellComment() != null) {
+            if ( fromCell.getCellComment() != null && copyComment) {
                 toCell.setCellComment( fromCell.getCellComment());
             }
         }
+    }
+    
+    /**
+     * スタイルのコピーが可能か判定
+     * @param fromCell　コピー元セル
+     * @param toCell　コピー先セル
+     * @return　スタイルのコピー可否
+     */
+    private static boolean canCopyStyle(Cell fromCell, Cell toCell){
+    	//コピー元のスタイルがnullではない。かつ、同ワークブックであるかどうか。
+    	return fromCell.getCellStyle() != null
+                && fromCell.getSheet().getWorkbook().equals(toCell.getSheet().getWorkbook());
     }
 
     /**
