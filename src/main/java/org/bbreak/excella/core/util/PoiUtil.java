@@ -96,7 +96,7 @@ public final class PoiUtil {
         Object value = null;
 
         if ( cell != null) {
-            switch ( cell.getCellTypeEnum()) {
+            switch ( cell.getCellType()) {
                 case BLANK:
                     break;
                 case BOOLEAN:
@@ -120,7 +120,7 @@ public final class PoiUtil {
                     FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
                     // 式を評価
                     CellValue cellValue = evaluator.evaluate( cell);
-                    CellType cellType = cellValue.getCellTypeEnum();
+                    CellType cellType = cellValue.getCellType();
                     // 評価結果の型で分岐
                     switch ( cellType) {
                         case BLANK:
@@ -241,10 +241,10 @@ public final class PoiUtil {
      * @return 取得した値
      */
     public static Object getCellValue( Cell cell, Class<?> propertyClass) {
-        if ( cell.getCellTypeEnum() == CellType.BLANK) {
+        if ( cell.getCellType() == CellType.BLANK) {
             // セルが空
             return null;
-        } else if ( cell.getCellTypeEnum() == CellType.STRING && StringUtil.isEmpty( cell.getStringCellValue())) {
+        } else if ( cell.getCellType() == CellType.STRING && StringUtil.isEmpty( cell.getStringCellValue())) {
             // セルタイプが文字列で、空の場合はnullを返す
             return null;
         }
@@ -391,7 +391,7 @@ public final class PoiUtil {
         if ( fromCell != null) {
 
             // 値
-            CellType cellType = fromCell.getCellTypeEnum();
+            CellType cellType = fromCell.getCellType();
             switch ( cellType) {
                 case BLANK:
                     break;
@@ -858,7 +858,7 @@ public final class PoiUtil {
             Iterator<Cell> cellIterator = row.cellIterator();
             while ( cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
-                if ( cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+                if ( cell.getCellType() == CellType.BLANK) {
                     cell.setCellValue( "");
                 }
             }
@@ -957,7 +957,7 @@ public final class PoiUtil {
                 cell.setCellValue( boolValue);
             }
         } else {
-            cell.setCellType( CellType.BLANK);
+            cell.setBlank();
             cell.setCellStyle( style);
         }
     }

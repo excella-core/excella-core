@@ -39,7 +39,6 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -594,12 +593,12 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_2.getRow( 33));
 
         // No.13 コピー範囲重なる
-        Cell copyFrom1 = sheet_2.getRow( 40).getCell( 0);
-        Cell copyFrom2 = sheet_2.getRow( 40).getCell( 1);
-        Cell copyFrom3 = sheet_2.getRow( 40).getCell( 2);
-        Cell copyFrom4 = sheet_2.getRow( 41).getCell( 0);
-        Cell copyFrom5 = sheet_2.getRow( 41).getCell( 1);
-        Cell copyFrom6 = sheet_2.getRow( 41).getCell( 2);
+        Cell copyFrom1 = new CellClone( sheet_2.getRow( 40).getCell( 0));
+        Cell copyFrom2 = new CellClone( sheet_2.getRow( 40).getCell( 1));
+        Cell copyFrom3 = new CellClone( sheet_2.getRow( 40).getCell( 2));
+        Cell copyFrom4 = new CellClone( sheet_2.getRow( 41).getCell( 0));
+        Cell copyFrom5 = new CellClone( sheet_2.getRow( 41).getCell( 1));
+        Cell copyFrom6 = new CellClone( sheet_2.getRow( 41).getCell( 2));
 
         PoiUtil.copyRange( sheet_2, new CellRangeAddress( 40, 41, 0, 2), sheet_2, 41, 1, false);
         try {
@@ -615,7 +614,7 @@ public class PoiUtilTest extends WorkbookTest {
         }
 
         // No.14 コピー範囲を削除する（一時シートなし）
-        copyFrom1 = sheet_2.getRow( 49).getCell( 0);
+        copyFrom1 = new CellClone( sheet_2.getRow( 49).getCell( 0));
         PoiUtil.copyRange( sheet_2, new CellRangeAddress( 49, 49, 0, 0), sheet_2, 49, 2, true);
         assertNull( sheet_2.getRow( 49).getCell( 0));
         try {
@@ -654,10 +653,10 @@ public class PoiUtilTest extends WorkbookTest {
         // insertRangeDown( Sheet sheet, CellRangeAddress rangeAddress)
         // ===============================================
         // No.16 insertRangeDown
-        copyFrom1 = sheet_3.getRow( 1).getCell( 1);
-        copyFrom2 = sheet_3.getRow( 1).getCell( 2);
-        copyFrom3 = sheet_3.getRow( 2).getCell( 1);
-        copyFrom4 = sheet_3.getRow( 2).getCell( 2);
+        copyFrom1 = new CellClone( sheet_3.getRow( 1).getCell( 1));
+        copyFrom2 = new CellClone( sheet_3.getRow( 1).getCell( 2));
+        copyFrom3 = new CellClone( sheet_3.getRow( 2).getCell( 1));
+        copyFrom4 = new CellClone( sheet_3.getRow( 2).getCell( 2));
         PoiUtil.insertRangeDown( sheet_3, new CellRangeAddress( 1, 2, 1, 2));
         assertNull( sheet_3.getRow( 1).getCell( 1));
         assertNull( sheet_3.getRow( 1).getCell( 2));
@@ -677,10 +676,10 @@ public class PoiUtilTest extends WorkbookTest {
         // insertRangeRight( Sheet sheet, CellRangeAddress rangeAddress)
         // ===============================================
         // No.17 insertRangeRight
-        copyFrom1 = sheet_3.getRow( 6).getCell( 5);
-        copyFrom2 = sheet_3.getRow( 6).getCell( 6);
-        copyFrom3 = sheet_3.getRow( 7).getCell( 5);
-        copyFrom4 = sheet_3.getRow( 7).getCell( 6);
+        copyFrom1 = new CellClone( sheet_3.getRow( 6).getCell( 5));
+        copyFrom2 = new CellClone( sheet_3.getRow( 6).getCell( 6));
+        copyFrom3 = new CellClone( sheet_3.getRow( 7).getCell( 5));
+        copyFrom4 = new CellClone( sheet_3.getRow( 7).getCell( 6));
         PoiUtil.insertRangeRight( sheet_3, new CellRangeAddress( 6, 7, 5, 6));
         assertNull( sheet_3.getRow( 6).getCell( 5));
         assertNull( sheet_3.getRow( 6).getCell( 6));
@@ -700,10 +699,10 @@ public class PoiUtilTest extends WorkbookTest {
         // deleteRangeUp( Sheet sheet, CellRangeAddress rangeAddress)
         // ===============================================
         // No.18 deleteRangeUp
-        copyFrom1 = sheet_3.getRow( 13).getCell( 9);
-        copyFrom2 = sheet_3.getRow( 13).getCell( 10);
-        copyFrom3 = sheet_3.getRow( 14).getCell( 9);
-        copyFrom4 = sheet_3.getRow( 14).getCell( 10);
+        copyFrom1 = new CellClone( sheet_3.getRow( 13).getCell( 9));
+        copyFrom2 = new CellClone( sheet_3.getRow( 13).getCell( 10));
+        copyFrom3 = new CellClone( sheet_3.getRow( 14).getCell( 9));
+        copyFrom4 = new CellClone( sheet_3.getRow( 14).getCell( 10));
         PoiUtil.deleteRangeUp( sheet_3, new CellRangeAddress( 11, 12, 9, 10));
         assertNull( sheet_3.getRow( 13).getCell( 9));
         assertNull( sheet_3.getRow( 13).getCell( 10));
@@ -723,10 +722,10 @@ public class PoiUtilTest extends WorkbookTest {
         // deleteRangeLeft( Sheet sheet, CellRangeAddress rangeAddress)
         // ===============================================
         // No.19 deleteRangeLeft
-        copyFrom1 = sheet_3.getRow( 16).getCell( 15);
-        copyFrom2 = sheet_3.getRow( 16).getCell( 14);
-        copyFrom3 = sheet_3.getRow( 17).getCell( 15);
-        copyFrom4 = sheet_3.getRow( 17).getCell( 14);
+        copyFrom1 = new CellClone( sheet_3.getRow( 16).getCell( 15));
+        copyFrom2 = new CellClone( sheet_3.getRow( 16).getCell( 14));
+        copyFrom3 = new CellClone( sheet_3.getRow( 17).getCell( 15));
+        copyFrom4 = new CellClone( sheet_3.getRow( 17).getCell( 14));
         PoiUtil.deleteRangeLeft( sheet_3, new CellRangeAddress( 16, 17, 13, 14));
         assertNull( sheet_3.getRow( 16).getCell( 15));
         assertNull( sheet_3.getRow( 16).getCell( 16));

@@ -1,5 +1,6 @@
 package org.bbreak.excella.core;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,7 +36,7 @@ public class CellClone implements Cell {
 
 	private CellStyle cellStyle;
 	
-	private CellType cellTypeEnum;
+	private CellType cellType;
 
 	private Comment cellComment;
 	
@@ -66,13 +67,13 @@ public class CellClone implements Cell {
 		this.rowIndex = cell.getRowIndex();
 		this.columnIndex = cell.getColumnIndex();
 		this.cellStyle = cell.getCellStyle();
-		this.cellTypeEnum = cell.getCellTypeEnum();
+		this.cellType = cell.getCellType();
 		this.cellComment = cell.getCellComment();
 		this.row = cell.getRow();
 		this.sheet = cell.getSheet();
 		this.hyperlink = cell.getHyperlink();
 
-        switch ( this.cellTypeEnum) {
+        switch ( this.cellType) {
             case STRING:
                 this.richStringCellValue = cell.getRichStringCellValue();
                 break;
@@ -112,7 +113,7 @@ public class CellClone implements Cell {
 		return booleanCellValue;
 	}
 
-	public int getCachedFormulaResultType() {
+	public CellType getCachedFormulaResultType() {
 		throw new IllegalStateException("CellClone is not support getCachedFormulaResultType().");
 	}
 
@@ -128,9 +129,8 @@ public class CellClone implements Cell {
 		return cellStyle;
 	}
 
-	@Deprecated
-	public int getCellType() {
-		return cellTypeEnum.getCode();
+	public CellType getCellType() {
+		return cellType;
 	}
 
 	public int getColumnIndex() {
@@ -246,7 +246,7 @@ public class CellClone implements Cell {
 
     @Override
     public CellType getCellTypeEnum() {
-        return cellTypeEnum;
+        return cellType;
     }
 
     @Override
@@ -257,6 +257,26 @@ public class CellClone implements Cell {
     @Override
     public CellAddress getAddress() {
         return new CellAddress(this);
+    }
+
+    @Override
+    public void setBlank() {
+        throw new IllegalStateException("CellClone is not support setBlank().");
+    }
+
+    @Override
+    public void removeFormula() throws IllegalStateException {
+        throw new IllegalStateException("CellClone is not support removeFormula().");
+    }
+
+    @Override
+    public LocalDateTime getLocalDateTimeCellValue() {
+        throw new IllegalStateException("CellClone is not support getLocalDateTimeCellValue().");
+    }
+
+    @Override
+    public void setCellValue(LocalDateTime value) {
+        throw new IllegalStateException("CellClone is not support setCellValue(LocalDateTime).");
     }
 
 }
