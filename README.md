@@ -16,10 +16,10 @@ Excella Core
 2. 配布条件  
 -------------
 
-  本ソフトウェアはLGPL v3にて公開しています。
-  詳細は「COPYING.LESSER」ファイルまたは
+  本ソフトウェアはApache License, Version 2.0にて公開しています。
+  詳細は「LICENSE.txt」ファイルまたは
   以下のページを参照してください。
-  http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+  https://www.apache.org/licenses/LICENSE-2.0.txt
 
 
 3. 免責  
