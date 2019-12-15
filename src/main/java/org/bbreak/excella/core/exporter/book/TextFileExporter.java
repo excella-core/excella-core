@@ -1,30 +1,23 @@
-/*************************************************************************
- *
- * Copyright 2009 by bBreak Systems.
- *
- * ExCella Core - ExcelファイルをJavaから利用するための共通基盤
- *
- * $Id: TextFileExporter.java 62 2009-05-21 07:35:40Z akira-yokoi $
- * $Revision: 62 $
- *
- * This file is part of ExCella Core.
- *
- * ExCella Core is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License version 3
- * only, as published by the Free Software Foundation.
- *
- * ExCella Core is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License version 3 for more details
- * (a copy is included in the COPYING.LESSER file that accompanied this code).
- *
- * You should have received a copy of the GNU Lesser General Public License
- * version 3 along with ExCella Core.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0-standalone.html>
- * for a copy of the LGPLv3 License.
- *
- ************************************************************************/
+/*-
+ * #%L
+ * excella-core
+ * %%
+ * Copyright (C) 2009 - 2019 bBreak Systems and contributors
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 package org.bbreak.excella.core.exporter.book;
 
 import java.io.BufferedWriter;
