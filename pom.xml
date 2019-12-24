@@ -6,7 +6,7 @@
   <name>excella-core</name>
 
   <properties>
-    <java.version>1.7</java.version>
+    <java.version>1.8</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -110,17 +110,17 @@
   	<dependency>
   		<groupId>org.apache.poi</groupId>
   		<artifactId>poi</artifactId>
-  		<version>3.16</version>
+  		<version>4.1.1</version>
   	</dependency>
   	<dependency>
   		<groupId>org.apache.poi</groupId>
   		<artifactId>poi-ooxml</artifactId>
-  		<version>3.16</version>
+  		<version>4.1.1</version>
   	</dependency>
   	<dependency>
   		<groupId>org.apache.poi</groupId>
   		<artifactId>poi-ooxml-schemas</artifactId>
-  		<version>3.16</version>
+  		<version>4.1.1</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>

@@ -69,9 +69,9 @@ public final class TestUtil {
         }
 
         // 型
-        if ( expected.getCellTypeEnum() != actual.getCellTypeEnum()) {
-            errors.add( new CheckMessage( "型[" + "セル(" + expected.getRowIndex() + "," + expected.getColumnIndex() + ")" + "]", String.valueOf( expected.getCellTypeEnum()), String.valueOf( actual
-                .getCellTypeEnum())));
+        if ( expected.getCellType() != actual.getCellType()) {
+            errors.add( new CheckMessage( "型[" + "セル(" + expected.getRowIndex() + "," + expected.getColumnIndex() + ")" + "]", String.valueOf( expected.getCellType()), String.valueOf( actual
+                .getCellType())));
             throw new CheckException( errors);
         }
 
@@ -99,7 +99,7 @@ public final class TestUtil {
         String value = null;
 
         if ( cell != null) {
-            switch ( cell.getCellTypeEnum()) {
+            switch ( cell.getCellType()) {
                 case BLANK:
                     value = cell.getStringCellValue();
                     break;

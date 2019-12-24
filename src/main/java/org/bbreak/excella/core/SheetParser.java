@@ -168,7 +168,7 @@ public class SheetParser {
                 }
                 
                 cell = row.getCell(columnIdx);
-                if ( cell != null && cell.getCellTypeEnum() == CellType.STRING && !strCellValue.equals( cell.getStringCellValue())) {
+                if ( cell != null && cell.getCellType() == CellType.STRING && !strCellValue.equals( cell.getStringCellValue())) {
                     // 解析後、値が変わっていれば、再帰的に解析する
                     if ( parseCell( sheet, data, sheetData, cell, row, columnIdx)) {
                         // 終了タグによる終了

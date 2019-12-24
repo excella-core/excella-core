@@ -79,7 +79,7 @@ public abstract class TagParser<RESULT> {
      */
     public boolean isParse( Sheet sheet, Cell tagCell) throws ParseException {
         // 文字列かつ、タグを含むセルの場合は処理対象
-        if ( tagCell.getCellTypeEnum() == CellType.STRING) {
+        if ( tagCell.getCellType() == CellType.STRING) {
             String cellTag = TagUtil.getTag( tagCell.getStringCellValue());
             if ( tag.equals( cellTag)) {
                 return true;

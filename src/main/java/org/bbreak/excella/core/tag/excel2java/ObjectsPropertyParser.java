@@ -79,7 +79,7 @@ public abstract class ObjectsPropertyParser {
         }
 
         // 文字列かつ、タグを含むセルの場合は処理対象
-        if ( tagCell.getCellTypeEnum() == CellType.STRING) {
+        if ( tagCell.getCellType() == CellType.STRING) {
             if ( tagCell.getStringCellValue().contains( tag)) {
                 return true;
             }
