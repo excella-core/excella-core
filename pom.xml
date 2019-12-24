@@ -12,6 +12,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <inceptionYear>2009</inceptionYear>
+
+  <licenses>
+	  <license>
+		  <name>Apache License, Version 2.0</name>
+		  <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	  </license>
+  </licenses>
+
   <distributionManagement>
   	<repository>
   		<id>deploy-local</id>
@@ -76,6 +85,16 @@
 				</excludes>
 			</configuration>
 	    </plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>license-maven-plugin</artifactId>
+			<version>2.0.0</version>
+			<configuration>
+				<licenseName>apache_v2</licenseName>
+				<organizationName>bBreak Systems and contributors</organizationName>
+				<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+			</configuration>
+		</plugin>
   	</plugins>
   </build>
   <reporting>
