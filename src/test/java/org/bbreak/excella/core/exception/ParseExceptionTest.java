@@ -20,6 +20,8 @@
 
 package org.bbreak.excella.core.exception;
 
+import java.io.IOException;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.bbreak.excella.core.WorkbookTest;
@@ -32,18 +34,18 @@ import org.junit.Test;
  * @since 1.0
  */
 public class ParseExceptionTest extends WorkbookTest {
-    
+
     /**
      * コンストラクタ
      * 
      * @param version Excelファイルのバージョン
      */
-    public ParseExceptionTest( String version) {
-        super( version);
+    public ParseExceptionTest(String version) {
+        super(version);
     }
 
     @Test
-    public void testParseException() {
+    public void testParseException() throws IOException {
         Workbook workbook = getWorkbook();
 
         String message = "test message";

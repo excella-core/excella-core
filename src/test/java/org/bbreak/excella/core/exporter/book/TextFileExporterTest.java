@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +63,7 @@ public class TextFileExporterTest {
         if (result) {
             System.out.println("作業ディレクトリ作成 : " + workDire.getAbsolutePath());
         } else {
-            System.out.println("作業ディレクトリが作成できませんでした。 : " + workDire.getAbsolutePath());
-            System.out.println("テスト中断");
+            throw new IOException("作業ディレクトリが作成できませんでした。 : " + workDire.getAbsolutePath());
         }
     }
 
@@ -255,7 +255,7 @@ public class TextFileExporterTest {
                 exporter.setup();
                 exporter.export( book, bookdata);
                 exporter.tearDown();
-                fail();
+                fail( "ExportException expected, but no exception thrown.");
 
             } catch ( ExportException ee) {
                 System.out.println( ee);
@@ -268,7 +268,7 @@ public class TextFileExporterTest {
                 exporter.setup();
                 exporter.export( book, bookdata);
                 exporter.tearDown();
-                fail();
+                fail( "ExportException excepted, but no exception thrown.");
 
             } catch ( ExportException ee) {
                 System.out.println( ee);

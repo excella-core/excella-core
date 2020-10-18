@@ -139,7 +139,7 @@ public class BookControllerTest extends WorkbookTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testBookController2() throws ParseException, ExportException {
+    public void testBookController2() throws ParseException, ExportException, IOException {
 
         Workbook workbook = getWorkbook();
         BookController controller = new BookController( workbook);

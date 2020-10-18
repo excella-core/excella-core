@@ -23,6 +23,7 @@ package org.bbreak.excella.core.tag.excel2java;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +50,8 @@ public class MapsParserTest extends WorkbookTest {
      * 
      * @param version Excelファイルのバージョン
      */
-    public MapsParserTest( String version) {
-        super( version);
+    public MapsParserTest(String version) {
+        super(version);
     }
 
     @BeforeClass
@@ -70,7 +71,7 @@ public class MapsParserTest extends WorkbookTest {
     }
 
     @Test
-    public final void testMapsParser() throws ParseException {
+    public final void testMapsParser() throws ParseException, IOException {
         Workbook wk = getWorkbook();
         Sheet sheet1 = wk.getSheetAt( 0);
         Sheet sheet2 = wk.getSheetAt( 1);
@@ -269,7 +270,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 21, cell.getRow().getRowNum());
@@ -282,7 +283,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 27, cell.getRow().getRowNum());
@@ -295,7 +296,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 30, cell.getRow().getRowNum());
@@ -321,7 +322,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 36, cell.getRow().getRowNum());
@@ -334,7 +335,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 39, cell.getRow().getRowNum());
@@ -347,7 +348,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet4, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 42, cell.getRow().getRowNum());
@@ -360,7 +361,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 0, cell.getRow().getRowNum());
@@ -373,7 +374,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 0, cell.getRow().getRowNum());
@@ -386,7 +387,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 0, cell.getRow().getRowNum());
@@ -399,7 +400,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 18, cell.getRow().getRowNum());
@@ -412,7 +413,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 18, cell.getRow().getRowNum());
@@ -425,7 +426,7 @@ public class MapsParserTest extends WorkbookTest {
         maps.clear();
         try {
             maps = mapsParser.parse( sheet5, tagCell, data);
-            fail();
+            fail( "ParseException expected, but no exception thrown,");
         } catch ( ParseException pe) {
             Cell cell = pe.getCell();
             assertEquals( 18, cell.getRow().getRowNum());

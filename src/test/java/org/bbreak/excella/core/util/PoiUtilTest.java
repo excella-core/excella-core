@@ -308,7 +308,7 @@ public class PoiUtilTest extends WorkbookTest {
     }
 
     @Test
-    public void testPoiUtil2() throws ParseException {
+    public void testPoiUtil2() throws ParseException, IOException {
 
         Workbook workbook = getWorkbook();
         Sheet sheet_1 = workbook.getSheetAt( 0);
@@ -397,7 +397,7 @@ public class PoiUtilTest extends WorkbookTest {
     }
 
     @Test
-    public void testPoiUtil3() throws IOException, ParseException {
+    public void testPoiUtil3() throws IOException, ParseException, CheckException {
 
         Workbook workbook = getWorkbook();
         Sheet sheet_1 = workbook.getSheetAt( 0);
@@ -457,27 +457,21 @@ public class PoiUtilTest extends WorkbookTest {
         PoiUtil.copyCell( fromCellDateFrml, toCellDateFrml);
         PoiUtil.copyCell( fromCellBlankFrml, toCellBlankFrml);
 
-        try {
-            // セルの検証
-            TestUtil.checkCell( fromCellNumeric, toCellNumeric);
-            TestUtil.checkCell( fromCellFormula, toCellFormula);
-            TestUtil.checkCell( fromCellString, toCellString);
-            TestUtil.checkCell( fromCellBoolean, toCellBoolean);
-            TestUtil.checkCell( fromCellError, toCellError);
-            TestUtil.checkCell( fromCellDate, toCellDate);
-            TestUtil.checkCell( fromCellBlank, toCellBlank);
+        // セルの検証
+        TestUtil.checkCell( fromCellNumeric, toCellNumeric);
+        TestUtil.checkCell( fromCellFormula, toCellFormula);
+        TestUtil.checkCell( fromCellString, toCellString);
+        TestUtil.checkCell( fromCellBoolean, toCellBoolean);
+        TestUtil.checkCell( fromCellError, toCellError);
+        TestUtil.checkCell( fromCellDate, toCellDate);
+        TestUtil.checkCell( fromCellBlank, toCellBlank);
 
-            TestUtil.checkCell( fromCellNumericFrml, toCellNumericFrml);
-            TestUtil.checkCell( fromCellStringFrml, toCellStringFrml);
-            TestUtil.checkCell( fromCellBooleanFrml, toCellBooleanFrml);
-            TestUtil.checkCell( fromCellErrorFrml, toCellErrorFrml);
-            TestUtil.checkCell( fromCellDateFrml, toCellDateFrml);
-            TestUtil.checkCell( fromCellBlankFrml, toCellBlankFrml);
-
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( fromCellNumericFrml, toCellNumericFrml);
+        TestUtil.checkCell( fromCellStringFrml, toCellStringFrml);
+        TestUtil.checkCell( fromCellBooleanFrml, toCellBooleanFrml);
+        TestUtil.checkCell( fromCellErrorFrml, toCellErrorFrml);
+        TestUtil.checkCell( fromCellDateFrml, toCellDateFrml);
+        TestUtil.checkCell( fromCellBlankFrml, toCellBlankFrml);
 
         // No.2 fromCellがnull
         Cell toCell = sheet_1.getRow( 0).createCell( 10);
@@ -486,7 +480,7 @@ public class PoiUtilTest extends WorkbookTest {
         // No.3 toCellがnull
         try {
             PoiUtil.copyCell( fromCellNumeric, null);
-            fail();
+            fail( "NullPointerException expected, but no exception thrown.");
         } catch ( NullPointerException ex) {
             // toCellがnullの場合は例外が発生
         }
@@ -500,44 +494,34 @@ public class PoiUtilTest extends WorkbookTest {
         // ===============================================
         // No.5 単一セル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 0, 0, 0, 0), sheet_2, 0, 3, false);
-        try {
-            TestUtil.checkCell( sheet_1.getRow( 0).getCell( 0), sheet_2.getRow( 0).getCell( 3));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( sheet_1.getRow( 0).getCell( 0), sheet_2.getRow( 0).getCell( 3));
 
         // No.6 複数セル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 1, 12, 0, 1), sheet_2, 9, 0, false);
-        try {
-            TestUtil.checkCell( sheet_1.getRow( 1).getCell( 0), sheet_2.getRow( 9).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 2).getCell( 0), sheet_2.getRow( 10).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 3).getCell( 0), sheet_2.getRow( 11).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 4).getCell( 0), sheet_2.getRow( 12).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 5).getCell( 0), sheet_2.getRow( 13).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 6).getCell( 0), sheet_2.getRow( 14).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 7).getCell( 0), sheet_2.getRow( 15).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 8).getCell( 0), sheet_2.getRow( 16).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 9).getCell( 0), sheet_2.getRow( 17).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 10).getCell( 0), sheet_2.getRow( 18).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 11).getCell( 0), sheet_2.getRow( 19).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 12).getCell( 0), sheet_2.getRow( 20).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 1).getCell( 1), sheet_2.getRow( 9).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 2).getCell( 1), sheet_2.getRow( 10).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 3).getCell( 1), sheet_2.getRow( 11).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 4).getCell( 1), sheet_2.getRow( 12).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 5).getCell( 1), sheet_2.getRow( 13).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 6).getCell( 1), sheet_2.getRow( 14).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 7).getCell( 1), sheet_2.getRow( 15).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 8).getCell( 1), sheet_2.getRow( 16).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 9).getCell( 1), sheet_2.getRow( 17).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 10).getCell( 1), sheet_2.getRow( 18).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 11).getCell( 1), sheet_2.getRow( 19).getCell( 1));
-            TestUtil.checkCell( sheet_1.getRow( 12).getCell( 1), sheet_2.getRow( 20).getCell( 1));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( sheet_1.getRow( 1).getCell( 0), sheet_2.getRow( 9).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 2).getCell( 0), sheet_2.getRow( 10).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 3).getCell( 0), sheet_2.getRow( 11).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 4).getCell( 0), sheet_2.getRow( 12).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 5).getCell( 0), sheet_2.getRow( 13).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 6).getCell( 0), sheet_2.getRow( 14).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 7).getCell( 0), sheet_2.getRow( 15).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 8).getCell( 0), sheet_2.getRow( 16).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 9).getCell( 0), sheet_2.getRow( 17).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 10).getCell( 0), sheet_2.getRow( 18).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 11).getCell( 0), sheet_2.getRow( 19).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 12).getCell( 0), sheet_2.getRow( 20).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 1).getCell( 1), sheet_2.getRow( 9).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 2).getCell( 1), sheet_2.getRow( 10).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 3).getCell( 1), sheet_2.getRow( 11).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 4).getCell( 1), sheet_2.getRow( 12).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 5).getCell( 1), sheet_2.getRow( 13).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 6).getCell( 1), sheet_2.getRow( 14).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 7).getCell( 1), sheet_2.getRow( 15).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 8).getCell( 1), sheet_2.getRow( 16).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 9).getCell( 1), sheet_2.getRow( 17).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 10).getCell( 1), sheet_2.getRow( 18).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 11).getCell( 1), sheet_2.getRow( 19).getCell( 1));
+        TestUtil.checkCell( sheet_1.getRow( 12).getCell( 1), sheet_2.getRow( 20).getCell( 1));
 
         // No.7 引数にnullを設定
         PoiUtil.copyRange( null, new CellRangeAddress( 0, 0, 0, 0), sheet_2, 0, 0, false);
@@ -546,40 +530,26 @@ public class PoiUtilTest extends WorkbookTest {
 
         // No.8 不正な範囲指定
         try {
-            PoiUtil.copyRange( sheet_1, new CellRangeAddress( -1, 0, 0, 0), sheet_2, 0, 0, false);
+            PoiUtil.copyRange( sheet_1, new CellRangeAddress( 1, 0, 0, 0), sheet_2, 0, 0, false);
+            fail( "IllegalArgumentException expected, but no exception thrown.");
         } catch ( IllegalArgumentException ex) {
             // 不正な範囲を指定した場合、例外が発生
         }
 
         // No.9 結合セル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 23, 23, 0, 1), sheet_2, 22, 0, false);
-        try {
-            TestUtil.checkCell( sheet_1.getRow( 23).getCell( 0), sheet_2.getRow( 22).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 23).getCell( 1), sheet_2.getRow( 22).getCell( 1));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( sheet_1.getRow( 23).getCell( 0), sheet_2.getRow( 22).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 23).getCell( 1), sheet_2.getRow( 22).getCell( 1));
 
         // No.10 結合セル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 25, 26, 0, 0), sheet_2, 24, 0, false);
-        try {
-            TestUtil.checkCell( sheet_1.getRow( 25).getCell( 0), sheet_2.getRow( 24).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 26).getCell( 0), sheet_2.getRow( 25).getCell( 0));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( sheet_1.getRow( 25).getCell( 0), sheet_2.getRow( 24).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 26).getCell( 0), sheet_2.getRow( 25).getCell( 0));
 
         // No.11 nullセル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 30, 30, 0, 1), sheet_2, 29, 0, false);
-        try {
-            TestUtil.checkCell( sheet_1.getRow( 30).getCell( 0), sheet_2.getRow( 29).getCell( 0));
-            TestUtil.checkCell( sheet_1.getRow( 30).getCell( 1), sheet_2.getRow( 29).getCell( 1));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( sheet_1.getRow( 30).getCell( 0), sheet_2.getRow( 29).getCell( 0));
+        TestUtil.checkCell( sheet_1.getRow( 30).getCell( 1), sheet_2.getRow( 29).getCell( 1));
 
         // No.12 null行範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 34, 34, 0, 3), sheet_2, 33, 0, false);
@@ -594,28 +564,18 @@ public class PoiUtilTest extends WorkbookTest {
         Cell copyFrom6 = new CellClone( sheet_2.getRow( 41).getCell( 2));
 
         PoiUtil.copyRange( sheet_2, new CellRangeAddress( 40, 41, 0, 2), sheet_2, 41, 1, false);
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_2.getRow( 41).getCell( 1));
-            TestUtil.checkCell( copyFrom2, sheet_2.getRow( 41).getCell( 2));
-            TestUtil.checkCell( copyFrom3, sheet_2.getRow( 41).getCell( 3));
-            TestUtil.checkCell( copyFrom4, sheet_2.getRow( 42).getCell( 1));
-            TestUtil.checkCell( copyFrom5, sheet_2.getRow( 42).getCell( 2));
-            TestUtil.checkCell( copyFrom6, sheet_2.getRow( 42).getCell( 3));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_2.getRow( 41).getCell( 1));
+        TestUtil.checkCell( copyFrom2, sheet_2.getRow( 41).getCell( 2));
+        TestUtil.checkCell( copyFrom3, sheet_2.getRow( 41).getCell( 3));
+        TestUtil.checkCell( copyFrom4, sheet_2.getRow( 42).getCell( 1));
+        TestUtil.checkCell( copyFrom5, sheet_2.getRow( 42).getCell( 2));
+        TestUtil.checkCell( copyFrom6, sheet_2.getRow( 42).getCell( 3));
 
         // No.14 コピー範囲を削除する（一時シートなし）
         copyFrom1 = new CellClone( sheet_2.getRow( 49).getCell( 0));
         PoiUtil.copyRange( sheet_2, new CellRangeAddress( 49, 49, 0, 0), sheet_2, 49, 2, true);
         assertNull( sheet_2.getRow( 49).getCell( 0));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_2.getRow( 49).getCell( 2));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_2.getRow( 49).getCell( 2));
 
         // No.15 コピー範囲を削除する（一時シートあり）
         copyFrom1 = new CellClone( sheet_2.getRow( 55).getCell( 0));
@@ -630,17 +590,12 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_2.getRow( 55).getCell( 1));
         assertNull( sheet_2.getRow( 55).getCell( 2));
         assertNull( sheet_2.getRow( 56).getCell( 0));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_2.getRow( 56).getCell( 1));
-            TestUtil.checkCell( copyFrom2, sheet_2.getRow( 56).getCell( 2));
-            TestUtil.checkCell( copyFrom3, sheet_2.getRow( 56).getCell( 3));
-            TestUtil.checkCell( copyFrom4, sheet_2.getRow( 57).getCell( 1));
-            TestUtil.checkCell( copyFrom5, sheet_2.getRow( 57).getCell( 2));
-            TestUtil.checkCell( copyFrom6, sheet_2.getRow( 57).getCell( 3));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_2.getRow( 56).getCell( 1));
+        TestUtil.checkCell( copyFrom2, sheet_2.getRow( 56).getCell( 2));
+        TestUtil.checkCell( copyFrom3, sheet_2.getRow( 56).getCell( 3));
+        TestUtil.checkCell( copyFrom4, sheet_2.getRow( 57).getCell( 1));
+        TestUtil.checkCell( copyFrom5, sheet_2.getRow( 57).getCell( 2));
+        TestUtil.checkCell( copyFrom6, sheet_2.getRow( 57).getCell( 3));
 
         // ===============================================
         // insertRangeDown( Sheet sheet, CellRangeAddress rangeAddress)
@@ -655,15 +610,10 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_3.getRow( 1).getCell( 2));
         assertNull( sheet_3.getRow( 2).getCell( 1));
         assertNull( sheet_3.getRow( 2).getCell( 2));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_3.getRow( 3).getCell( 1));
-            TestUtil.checkCell( copyFrom2, sheet_3.getRow( 3).getCell( 2));
-            TestUtil.checkCell( copyFrom3, sheet_3.getRow( 4).getCell( 1));
-            TestUtil.checkCell( copyFrom4, sheet_3.getRow( 4).getCell( 2));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_3.getRow( 3).getCell( 1));
+        TestUtil.checkCell( copyFrom2, sheet_3.getRow( 3).getCell( 2));
+        TestUtil.checkCell( copyFrom3, sheet_3.getRow( 4).getCell( 1));
+        TestUtil.checkCell( copyFrom4, sheet_3.getRow( 4).getCell( 2));
 
         // ===============================================
         // insertRangeRight( Sheet sheet, CellRangeAddress rangeAddress)
@@ -678,15 +628,10 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_3.getRow( 6).getCell( 6));
         assertNull( sheet_3.getRow( 7).getCell( 5));
         assertNull( sheet_3.getRow( 7).getCell( 6));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_3.getRow( 6).getCell( 7));
-            TestUtil.checkCell( copyFrom2, sheet_3.getRow( 6).getCell( 8));
-            TestUtil.checkCell( copyFrom3, sheet_3.getRow( 7).getCell( 7));
-            TestUtil.checkCell( copyFrom4, sheet_3.getRow( 7).getCell( 8));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_3.getRow( 6).getCell( 7));
+        TestUtil.checkCell( copyFrom2, sheet_3.getRow( 6).getCell( 8));
+        TestUtil.checkCell( copyFrom3, sheet_3.getRow( 7).getCell( 7));
+        TestUtil.checkCell( copyFrom4, sheet_3.getRow( 7).getCell( 8));
 
         // ===============================================
         // deleteRangeUp( Sheet sheet, CellRangeAddress rangeAddress)
@@ -701,15 +646,10 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_3.getRow( 13).getCell( 10));
         assertNull( sheet_3.getRow( 14).getCell( 9));
         assertNull( sheet_3.getRow( 14).getCell( 10));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_3.getRow( 11).getCell( 9));
-            TestUtil.checkCell( copyFrom2, sheet_3.getRow( 11).getCell( 10));
-            TestUtil.checkCell( copyFrom3, sheet_3.getRow( 12).getCell( 9));
-            TestUtil.checkCell( copyFrom4, sheet_3.getRow( 12).getCell( 10));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_3.getRow( 11).getCell( 9));
+        TestUtil.checkCell( copyFrom2, sheet_3.getRow( 11).getCell( 10));
+        TestUtil.checkCell( copyFrom3, sheet_3.getRow( 12).getCell( 9));
+        TestUtil.checkCell( copyFrom4, sheet_3.getRow( 12).getCell( 10));
 
         // ===============================================
         // deleteRangeLeft( Sheet sheet, CellRangeAddress rangeAddress)
@@ -724,15 +664,10 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( sheet_3.getRow( 16).getCell( 16));
         assertNull( sheet_3.getRow( 17).getCell( 15));
         assertNull( sheet_3.getRow( 17).getCell( 16));
-        try {
-            TestUtil.checkCell( copyFrom1, sheet_3.getRow( 16).getCell( 13));
-            TestUtil.checkCell( copyFrom2, sheet_3.getRow( 16).getCell( 14));
-            TestUtil.checkCell( copyFrom3, sheet_3.getRow( 17).getCell( 13));
-            TestUtil.checkCell( copyFrom4, sheet_3.getRow( 17).getCell( 14));
-        } catch ( CheckException ex) {
-            System.out.println( ex.getCheckMessagesToString());
-            fail();
-        }
+        TestUtil.checkCell( copyFrom1, sheet_3.getRow( 16).getCell( 13));
+        TestUtil.checkCell( copyFrom2, sheet_3.getRow( 16).getCell( 14));
+        TestUtil.checkCell( copyFrom3, sheet_3.getRow( 17).getCell( 13));
+        TestUtil.checkCell( copyFrom4, sheet_3.getRow( 17).getCell( 14));
 
         // ===============================================
         // clearRange( Sheet sheet, CellRangeAddress rangeAddress)
@@ -760,7 +695,7 @@ public class PoiUtilTest extends WorkbookTest {
         // No.23 結合セルあり異常
         try {
             PoiUtil.clearRange( sheet_4, new CellRangeAddress( 10, 10, 0, 0));
-            fail();
+            fail( "IllegalArgumentException expected, but no exception thrown.");
         } catch ( IllegalArgumentException ex) {
             // 横範囲内に結合部分が完全に入っていない場合、例外
         }
@@ -771,7 +706,7 @@ public class PoiUtilTest extends WorkbookTest {
         // No.24 結合セルあり異常
         try {
             PoiUtil.clearRange( sheet_4, new CellRangeAddress( 12, 12, 0, 0));
-            fail();
+            fail( "IllegalArgumentException expected, but no exception thrown.");
         } catch ( IllegalArgumentException ex) {
             // 縦範囲内に結合部分が完全に入っていない場合、例外
         }
@@ -835,7 +770,7 @@ public class PoiUtilTest extends WorkbookTest {
         // No.28 セルがnull
         try {
             PoiUtil.setCellValue( null, stringValue);
-            fail();
+            fail( "NullPointerException expected, but no exception thrown.");
         } catch ( NullPointerException ex) {
             // セルがnullの場合は例外が発生
         }

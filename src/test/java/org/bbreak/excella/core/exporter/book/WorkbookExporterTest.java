@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bbreak.excella.core.BookData;
 import org.bbreak.excella.core.WorkbookTest;
@@ -65,8 +66,7 @@ public class WorkbookExporterTest extends WorkbookTest {
         if ( result) {
             System.out.println( "作業ディレクトリ作成 : " + workDire.getAbsolutePath());
         } else {
-            System.out.println( "作業ディレクトリが作成できませんでした。 : " + workDire.getAbsolutePath());
-            System.out.println( "テスト中断");
+            throw new IOException( "作業ディレクトリが作成できませんでした。 : " + workDire.getAbsolutePath());
         }
     }
 
@@ -108,7 +108,7 @@ public class WorkbookExporterTest extends WorkbookTest {
             exporter2.setup();
             exporter2.export( getWorkbook(), bookdata);
             exporter2.tearDown();
-            fail();
+            fail( "ExportException excepted, but no exception thrown.");
 
         } catch ( ExportException ee) {
         }

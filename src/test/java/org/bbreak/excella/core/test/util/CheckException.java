@@ -71,4 +71,9 @@ public class CheckException extends Exception {
         }
         return buffer.toString();
     }
+
+    @Override
+    public String getMessage() {
+        return getCheckMessagesToString() + System.lineSeparator()+ super.getMessage();
+    }
 }

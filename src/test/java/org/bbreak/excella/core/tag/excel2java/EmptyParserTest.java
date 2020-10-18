@@ -22,6 +22,8 @@ package org.bbreak.excella.core.tag.excel2java;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -45,8 +47,8 @@ public class EmptyParserTest extends WorkbookTest {
      * 
      * @param version Excelファイルのバージョン
      */
-    public EmptyParserTest( String version) {
-        super( version);
+    public EmptyParserTest(String version) {
+        super(version);
     }
 
     @BeforeClass
@@ -66,7 +68,7 @@ public class EmptyParserTest extends WorkbookTest {
     }
 
     @Test
-    public final void testEmptyParser() throws ParseException {
+    public final void testEmptyParser() throws ParseException, IOException {
         Workbook wk = getWorkbook();
         Sheet sheet1 = wk.getSheetAt( 0);
         EmptyParser emptyParser = new EmptyParser( "@Empty");
