@@ -20,6 +20,7 @@
 
 package org.bbreak.excella.core.exporter.book;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.bbreak.excella.core.BookData;
 import org.bbreak.excella.core.SheetData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * ConsoleExporterテストクラス
@@ -38,6 +39,10 @@ public class ConsoleExporterTest {
 
     @Test
     public void testConsoleExporter() throws Exception {
+        assertDoesNotThrow(this::testConsoleExporterImpl);
+    }
+
+    private void testConsoleExporterImpl() throws Exception {
         Workbook book = null;
         
         // sheetdata1作成

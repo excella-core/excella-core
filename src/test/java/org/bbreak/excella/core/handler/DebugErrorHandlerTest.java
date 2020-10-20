@@ -20,6 +20,8 @@
 
 package org.bbreak.excella.core.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Sheet;
@@ -29,8 +31,8 @@ import org.bbreak.excella.core.BookController;
 import org.bbreak.excella.core.CoreTestUtil;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.exception.ParseException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * DebugErrorHandlerrテストクラス
@@ -39,19 +41,11 @@ import org.junit.Test;
  */
 public class DebugErrorHandlerTest extends WorkbookTest {
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public DebugErrorHandlerTest(String version) {
-        super(version);
-    }
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testDebugErrorHandler( String version) throws IOException {
 
-    @Test
-    public void testDebugErrorHandler() throws IOException {
-
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         Sheet sheet = workbook.getSheetAt(0);
 
         String errorFilePath = CoreTestUtil.getTestOutputDir() + "DebugErrorHandlerTest" + System.currentTimeMillis();
@@ -72,7 +66,7 @@ public class DebugErrorHandlerTest extends WorkbookTest {
         // getErrorFilePath()
         // ===============================================
         String actualPath = debugErrorHandler.getErrorFilePath();
-        Assert.assertEquals(errorFilePath, actualPath);
+        assertEquals(errorFilePath, actualPath);
 
         // ===============================================
         // notifyException( Workbook workbook, Sheet sheet, ParseException exception)
@@ -82,10 +76,11 @@ public class DebugErrorHandlerTest extends WorkbookTest {
         debugErrorHandler.notifyException(workbook, sheet, new ParseException("message"));
     }
 
-    @Test
-    public void errorTest1() throws IOException {
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void errorTest1( String version) throws IOException {
 
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         Sheet sheet = workbook.getSheetAt( 0);
 
         // ===============================================

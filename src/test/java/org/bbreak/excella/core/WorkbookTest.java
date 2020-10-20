@@ -24,46 +24,25 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collection;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Workbookテストクラス
  * 
  * @since 1.0
  */
-@RunWith(Parameterized.class)
 public abstract class WorkbookTest {
     
-    /** Excelファイルのバージョン */
-    private String version = null;
-
     /** ファイルパス */
     private String filepath = null;
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public WorkbookTest( String version) {
-        this.version = version;
-    }
+    protected static final String VERSIONS = "2003, 2007";
 
-    @Parameters
-    public static Collection<?> parameters() {
-        return Arrays.asList( new Object[][] {{"2003"}, {"2007"}});
-    }
-
-    protected Workbook getWorkbook() throws IOException {
+    protected Workbook getWorkbook( String version) throws IOException {
 
         Workbook workbook = null;
 

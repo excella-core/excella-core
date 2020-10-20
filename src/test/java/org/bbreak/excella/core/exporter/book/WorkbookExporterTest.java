@@ -20,8 +20,8 @@
 
 package org.bbreak.excella.core.exporter.book;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,10 @@ import java.io.IOException;
 import org.bbreak.excella.core.BookData;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.exception.ExportException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * WorkbookExporterテストクラス
@@ -50,16 +51,7 @@ public class WorkbookExporterTest extends WorkbookTest {
      */
     private boolean result;
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public WorkbookExporterTest( String version) {
-        super( version);
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         workDire = new File( "workDire");
         result = workDire.mkdir();
@@ -70,7 +62,7 @@ public class WorkbookExporterTest extends WorkbookTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if ( result) {
             if ( workDire.delete()) {
@@ -81,8 +73,9 @@ public class WorkbookExporterTest extends WorkbookTest {
         }
     }
 
-    @Test
-    public void testWorkbookExporter() throws Exception {
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testWorkbookExporter( String version) throws Exception {
 
         BookData bookdata = null;
         String fileName = "WorkbookExporterTestFile";
@@ -92,7 +85,7 @@ public class WorkbookExporterTest extends WorkbookTest {
         WorkbookExporter exporter = new WorkbookExporter();
         exporter.setFilePath( filePath);
         exporter.setup();
-        exporter.export( getWorkbook(), bookdata);
+        exporter.export( getWorkbook( version), bookdata);
         exporter.tearDown();
 
         assertEquals( filePath, exporter.getFilePath());
@@ -101,17 +94,14 @@ public class WorkbookExporterTest extends WorkbookTest {
         file.delete();
 
         // No.2 不正ルート(ファイルパス不正)
-        try {
+        assertThrows( ExportException.class, () -> {
             String filePath2 = workDire.getAbsolutePath() + File.separatorChar + "dir" + File.separatorChar + fileName;
             WorkbookExporter exporter2 = new WorkbookExporter();
             exporter2.setFilePath( filePath2);
             exporter2.setup();
-            exporter2.export( getWorkbook(), bookdata);
+            exporter2.export( getWorkbook( version), bookdata);
             exporter2.tearDown();
-            fail( "ExportException excepted, but no exception thrown.");
-
-        } catch ( ExportException ee) {
-        }
+        });
     }
 
 }

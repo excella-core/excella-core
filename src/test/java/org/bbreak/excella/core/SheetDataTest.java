@@ -20,11 +20,12 @@
 
 package org.bbreak.excella.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * SheetDataテストクラス
@@ -49,7 +50,7 @@ public class SheetDataTest {
         // getSheetName()
         // ===============================================
         //存在するシート名
-        Assert.assertEquals( "hogehoge", sheetData.getSheetName());
+        assertEquals( "hogehoge", sheetData.getSheetName());
         
         
         // ===============================================
@@ -61,21 +62,21 @@ public class SheetDataTest {
         // getTagNames()
         // ===============================================
         Set<String> tagNames = sheetData.getTagNames();
-        Assert.assertEquals( "tagName1", tagNames.iterator().next());
+        assertEquals( "tagName1", tagNames.iterator().next());
         
         // ===============================================
         // containsTag( String tagName)
         // ===============================================
-        Assert.assertEquals( Boolean.TRUE, sheetData.containsTag( "tagName1"));
+        assertEquals( Boolean.TRUE, sheetData.containsTag( "tagName1"));
         
         // ===============================================
         // getKeyList( String tagName)
         // ===============================================
         sheetData.put( "tagName2", "testValue2");
         List<String> keyList = sheetData.getKeyList();
-        Assert.assertEquals( "tagName1", keyList.get( 0));
-        Assert.assertEquals( "tagName2", keyList.get( 1));
-        Assert.assertEquals( 2, keyList.size());
+        assertEquals( "tagName1", keyList.get( 0));
+        assertEquals( "tagName2", keyList.get( 1));
+        assertEquals( 2, keyList.size());
         
         // ===============================================
         // put(String tagName, Object result)
@@ -87,27 +88,27 @@ public class SheetDataTest {
         // get(String tagName)
         // ===============================================
         String value = (String) sheetData.get( "tagName1");
-        Assert.assertEquals( "testValue1", value);
+        assertEquals( "testValue1", value);
 
         // ===============================================
         // getList(String tagName)
         // ===============================================
         List<Object> values = sheetData.getList("tagName1");
-        Assert.assertEquals( "testValue", values.get( 0));
-        Assert.assertEquals( "testValue1", values.get( 1));
+        assertEquals( "testValue", values.get( 0));
+        assertEquals( "testValue1", values.get( 1));
         
         // ===============================================
         // remove( String key)
         // ===============================================
         sheetData.remove( "tagName1");
         tagNames = sheetData.getTagNames();
-        Assert.assertEquals( Boolean.FALSE, sheetData.containsTag( "tagName1"));
+        assertEquals( Boolean.FALSE, sheetData.containsTag( "tagName1"));
 
         // ===============================================
         // toString()
         // ===============================================
         String string = "=====================hogehoge=====================\n\ttagName2\ttestValue2";
-        Assert.assertEquals( string, sheetData.toString());
+        assertEquals( string, sheetData.toString());
         
     }
 

@@ -20,7 +20,7 @@
 
 package org.bbreak.excella.core.tag.excel2java;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
@@ -29,11 +29,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.exception.ParseException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * EmptyParserテストクラス
@@ -42,34 +39,10 @@ import org.junit.Test;
  */
 public class EmptyParserTest extends WorkbookTest {
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public EmptyParserTest(String version) {
-        super(version);
-    }
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public final void testEmptyParser() throws ParseException, IOException {
-        Workbook wk = getWorkbook();
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public final void testEmptyParser( String version) throws ParseException, IOException {
+        Workbook wk = getWorkbook( version);
         Sheet sheet1 = wk.getSheetAt( 0);
         EmptyParser emptyParser = new EmptyParser( "@Empty");
         Cell tagCell = null;

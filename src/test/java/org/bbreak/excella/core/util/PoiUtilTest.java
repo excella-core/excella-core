@@ -20,12 +20,12 @@
 
 package org.bbreak.excella.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -48,7 +48,8 @@ import org.bbreak.excella.core.CoreTestUtil;
 import org.bbreak.excella.core.WorkbookTest;
 import org.bbreak.excella.core.test.util.CheckException;
 import org.bbreak.excella.core.test.util.TestUtil;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * PoiUtilテストクラス
@@ -57,19 +58,11 @@ import org.junit.Test;
  */
 public class PoiUtilTest extends WorkbookTest {
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public PoiUtilTest( String version) {
-        super( version);
-    }
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testPoiUtil1( String version) throws IOException, ParseException {
 
-    @Test
-    public void testPoiUtil1() throws IOException, ParseException {
-
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         Sheet sheet_1 = workbook.getSheetAt( 0);
 
         Date expectedDate = DateFormat.getDateInstance().parse( "2009/4/16");
@@ -307,10 +300,11 @@ public class PoiUtilTest extends WorkbookTest {
         PoiUtil.writeBook( workbook, CoreTestUtil.getTestOutputDir() + "PoiUtilTest" + System.currentTimeMillis() + extension);
     }
 
-    @Test
-    public void testPoiUtil2() throws ParseException, IOException {
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testPoiUtil2( String version) throws ParseException, IOException {
 
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         Sheet sheet_1 = workbook.getSheetAt( 0);
 
         Date expectedDate = DateFormat.getDateInstance().parse( "2009/4/16");
@@ -396,10 +390,11 @@ public class PoiUtilTest extends WorkbookTest {
         // assertEquals( expectedDate, cellValue);
     }
 
-    @Test
-    public void testPoiUtil3() throws IOException, ParseException, CheckException {
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testPoiUtil3( String version) throws IOException, ParseException, CheckException {
 
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         Sheet sheet_1 = workbook.getSheetAt( 0);
         Sheet sheet_2 = workbook.getSheetAt( 1);
         Sheet sheet_3 = workbook.getSheetAt( 2);
@@ -478,12 +473,8 @@ public class PoiUtilTest extends WorkbookTest {
         PoiUtil.copyCell( null, toCell);
 
         // No.3 toCellがnull
-        try {
-            PoiUtil.copyCell( fromCellNumeric, null);
-            fail( "NullPointerException expected, but no exception thrown.");
-        } catch ( NullPointerException ex) {
-            // toCellがnullの場合は例外が発生
-        }
+        // toCellがnullの場合は例外が発生
+        assertThrows( NullPointerException.class, () -> PoiUtil.copyCell( fromCellNumeric, null));
 
         // No.4 コピー先が別シート
         Cell toCellNumeric2 = sheet_2.getRow( 0).createCell( 0);
@@ -529,12 +520,9 @@ public class PoiUtilTest extends WorkbookTest {
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 0, 0, 0, 0), null, 0, 0, false);
 
         // No.8 不正な範囲指定
-        try {
-            PoiUtil.copyRange( sheet_1, new CellRangeAddress( 1, 0, 0, 0), sheet_2, 0, 0, false);
-            fail( "IllegalArgumentException expected, but no exception thrown.");
-        } catch ( IllegalArgumentException ex) {
-            // 不正な範囲を指定した場合、例外が発生
-        }
+        // 不正な範囲を指定した場合、例外が発生
+        assertThrows( IllegalArgumentException.class,
+            () -> PoiUtil.copyRange( sheet_1, new CellRangeAddress( 1, 0, 0, 0), sheet_2, 0, 0, false));
 
         // No.9 結合セル範囲コピー
         PoiUtil.copyRange( sheet_1, new CellRangeAddress( 23, 23, 0, 1), sheet_2, 22, 0, false);
@@ -690,26 +678,22 @@ public class PoiUtilTest extends WorkbookTest {
 
         // No.22 結合セルあり正常
         PoiUtil.clearRange( sheet_4, new CellRangeAddress( 8, 8, 0, 1));
-        assertNull( null, sheet_4.getRow( 8).getCell( 0));
+        assertNull( sheet_4.getRow( 8).getCell( 0));
 
         // No.23 結合セルあり異常
-        try {
-            PoiUtil.clearRange( sheet_4, new CellRangeAddress( 10, 10, 0, 0));
-            fail( "IllegalArgumentException expected, but no exception thrown.");
-        } catch ( IllegalArgumentException ex) {
-            // 横範囲内に結合部分が完全に入っていない場合、例外
-        }
+        // 横範囲内に結合部分が完全に入っていない場合、例外
+        assertThrows( IllegalArgumentException.class, 
+            () -> PoiUtil.clearRange( sheet_4, new CellRangeAddress( 10, 10, 0, 0)));
+
         // 消えていないことを確認
         assertEquals( "11", sheet_4.getRow( 10).getCell( 0).getStringCellValue());
         assertNotNull( sheet_4.getRow( 10).getCell( 1).getStringCellValue());
 
         // No.24 結合セルあり異常
-        try {
-            PoiUtil.clearRange( sheet_4, new CellRangeAddress( 12, 12, 0, 0));
-            fail( "IllegalArgumentException expected, but no exception thrown.");
-        } catch ( IllegalArgumentException ex) {
-            // 縦範囲内に結合部分が完全に入っていない場合、例外
-        }
+        // 縦範囲内に結合部分が完全に入っていない場合、例外
+        assertThrows( IllegalArgumentException.class,
+            () -> PoiUtil.clearRange( sheet_4, new CellRangeAddress( 12, 12, 0, 0)));
+
         // 消えていないことを確認
         assertEquals( "13", sheet_4.getRow( 12).getCell( 0).getStringCellValue());
         assertNotNull( sheet_4.getRow( 13).getCell( 0).getStringCellValue());
@@ -768,12 +752,8 @@ public class PoiUtilTest extends WorkbookTest {
         assertNull( PoiUtil.getCellValue( cellNull));
 
         // No.28 セルがnull
-        try {
-            PoiUtil.setCellValue( null, stringValue);
-            fail( "NullPointerException expected, but no exception thrown.");
-        } catch ( NullPointerException ex) {
-            // セルがnullの場合は例外が発生
-        }
+        // セルがnullの場合は例外が発生
+        assertThrows( NullPointerException.class, () -> PoiUtil.setCellValue( null, stringValue));
 
         // ===============================================
         // getLastColNum( Sheet sheet)

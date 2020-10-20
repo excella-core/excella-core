@@ -20,11 +20,12 @@
 
 package org.bbreak.excella.core.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Map;
 
 import org.bbreak.excella.core.tag.TagParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TagUtilテストクラス

@@ -20,9 +20,10 @@
 
 package org.bbreak.excella.core.exporter.book;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,9 +36,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.bbreak.excella.core.BookData;
 import org.bbreak.excella.core.SheetData;
 import org.bbreak.excella.core.exception.ExportException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TextFileExporterテストクラス
@@ -56,7 +57,7 @@ public class TextFileExporterTest {
      */
     private boolean result;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         workDire = new File("TextFileExporterTestworkDire");
         result = workDire.mkdir();
@@ -67,7 +68,7 @@ public class TextFileExporterTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (result) {
             if (workDire.delete()) {
@@ -249,30 +250,24 @@ public class TextFileExporterTest {
             exporter4.tearDown();
 
             //No.5 不正ルート(baseFilePathディレクトリのみを設定)
-            try {
+            ExportException ee = assertThrows( ExportException.class, () -> {
                 TextFileExporter exporter = new TextFileExporter();
                 exporter.setBaseFilePath( workDire.getPath());
                 exporter.setup();
                 exporter.export( book, bookdata);
                 exporter.tearDown();
-                fail( "ExportException expected, but no exception thrown.");
-
-            } catch ( ExportException ee) {
-                System.out.println( ee);
-            }
+            });
+            System.out.println( ee);
 
             //No.6 不正ルート(directoryPath設定存在しないパス)
-            try {
+            ee = assertThrows( ExportException.class, () -> {
                 TextFileExporter exporter = new TextFileExporter();
                 exporter.setDirectoryPath( workDire.getPath() + File.separatorChar + "dir");
                 exporter.setup();
                 exporter.export( book, bookdata);
                 exporter.tearDown();
-                fail( "ExportException excepted, but no exception thrown.");
-
-            } catch ( ExportException ee) {
-                System.out.println( ee);
-            }
+            });
+            System.out.println( ee);
 
         } else {
             fail();
