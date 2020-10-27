@@ -101,16 +101,16 @@ public class ObjectsParserTest extends WorkbookTest {
         tagCell = sheet1.getRow( 13).getCell( 0);
         list = objectsParser.parse( sheet1, tagCell, data);
         TargetEntity targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Integer( "1"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "1"), targetEntity.getNumberInteger());
         assertEquals( 2, targetEntity.getNumberInt());
-        assertEquals( new Long( "3"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "3"), targetEntity.getNumberLong());
         assertEquals( 4, targetEntity.getNumberlong());
-        assertEquals( new Float( "5.5"), targetEntity.getNumberFloat());
+        assertEquals( Float.valueOf( "5.5"), targetEntity.getNumberFloat());
         assertEquals( "6.6", String.valueOf( targetEntity.getNumberfloat()));
-        assertEquals( new Double( "8.8"), targetEntity.getNumberDouble());
+        assertEquals( Double.valueOf( "8.8"), targetEntity.getNumberDouble());
         assertEquals( "9.9", String.valueOf( targetEntity.getNumberdouble()));
-        assertEquals( new BigDecimal( 10.1), targetEntity.getNumberDecimal());
-        assertEquals( new Byte( "11"), targetEntity.getNumberByte());
+        assertEquals( new BigDecimal( "10.1"), targetEntity.getNumberDecimal());
+        assertEquals( Byte.valueOf( "11"), targetEntity.getNumberByte());
         assertEquals( 12, targetEntity.getNumberbyte());
         assertEquals( Boolean.TRUE, targetEntity.getValueBoolean());
         assertEquals( Boolean.FALSE, targetEntity.isValueboolean());
@@ -123,10 +123,10 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Integer( "1"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "1"), targetEntity.getNumberInteger());
         assertEquals( 3, targetEntity.getNumberInt());
         targetEntity = ( TargetEntity) list.get( 1);
-        assertEquals( new Integer( "2"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "2"), targetEntity.getNumberInteger());
         assertEquals( 4, targetEntity.getNumberInt());
         assertEquals( 2, list.size());
 
@@ -135,10 +135,10 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Integer( "5"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "5"), targetEntity.getNumberInteger());
         assertEquals( 9, targetEntity.getNumberInt());
         targetEntity = ( TargetEntity) list.get( 1);
-        assertEquals( new Integer( "6"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "6"), targetEntity.getNumberInteger());
         assertEquals( 10, targetEntity.getNumberInt());
         assertEquals( 2, list.size());
 
@@ -154,13 +154,13 @@ public class ObjectsParserTest extends WorkbookTest {
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
         assertEquals( 20000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "26000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "26000000"), targetEntity.getNumberLong());
         targetEntity = ( TargetEntity) list.get( 1);
         assertEquals( 21000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "27000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "27000000"), targetEntity.getNumberLong());
         targetEntity = ( TargetEntity) list.get( 2);
         assertEquals( 22000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "28000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "28000000"), targetEntity.getNumberLong());
         assertEquals( 3, list.size());
 
         // No.7 キーセル値がnull
@@ -169,13 +169,13 @@ public class ObjectsParserTest extends WorkbookTest {
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
         assertEquals( 29000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "35000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "35000000"), targetEntity.getNumberLong());
         targetEntity = ( TargetEntity) list.get( 1);
         assertEquals( 30000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "36000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "36000000"), targetEntity.getNumberLong());
         targetEntity = ( TargetEntity) list.get( 2);
         assertEquals( 31000000, targetEntity.getNumberlong());
-        assertEquals( new Long( "37000000"), targetEntity.getNumberLong());
+        assertEquals( Long.valueOf( "37000000"), targetEntity.getNumberLong());
         assertEquals( 3, list.size());
 
         // No.8 値行がnull
@@ -183,10 +183,10 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Float( "38000000"), targetEntity.getNumberFloat());
+        assertEquals( Float.valueOf( "38000000"), targetEntity.getNumberFloat());
         assertEquals( 40000000, targetEntity.getNumberfloat(), 0.01);
         targetEntity = ( TargetEntity) list.get( 1);
-        assertEquals( new Float( "39000000"), targetEntity.getNumberFloat());
+        assertEquals( Float.valueOf( "39000000"), targetEntity.getNumberFloat());
         assertEquals( 41000000, targetEntity.getNumberfloat(), 0.01);
         assertEquals( 2, list.size());
 
@@ -195,14 +195,14 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Float( "42000000"), targetEntity.getNumberFloat());
-        assertEquals( new Double( "44000000"), targetEntity.getNumberDouble());
+        assertEquals( Float.valueOf( "42000000"), targetEntity.getNumberFloat());
+        assertEquals( Double.valueOf( "44000000"), targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 1);
         assertEquals( null, targetEntity.getNumberFloat());
         assertEquals( null, targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 2);
-        assertEquals( new Float( "43000000"), targetEntity.getNumberFloat());
-        assertEquals( new Double( "45000000"), targetEntity.getNumberDouble());
+        assertEquals( Float.valueOf( "43000000"), targetEntity.getNumberFloat());
+        assertEquals( Double.valueOf( "45000000"), targetEntity.getNumberDouble());
         assertEquals( 3, list.size());
 
         // No.10 値セル値がnull
@@ -210,14 +210,14 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Float( "46000000"), targetEntity.getNumberFloat());
-        assertEquals( new Double( "48000000"), targetEntity.getNumberDouble());
+        assertEquals( Float.valueOf( "46000000"), targetEntity.getNumberFloat());
+        assertEquals( Double.valueOf( "48000000"), targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 1);
         assertEquals( null, targetEntity.getNumberFloat());
         assertEquals( null, targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 2);
-        assertEquals( new Float( "47000000"), targetEntity.getNumberFloat());
-        assertEquals( new Double( "49000000"), targetEntity.getNumberDouble());
+        assertEquals( Float.valueOf( "47000000"), targetEntity.getNumberFloat());
+        assertEquals( Double.valueOf( "49000000"), targetEntity.getNumberDouble());
         assertEquals( 3, list.size());
 
         // No.11 重複キー有り
@@ -225,11 +225,11 @@ public class ObjectsParserTest extends WorkbookTest {
         list.clear();
         list = objectsParser.parse( sheet2, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Double( "8.8888888"), targetEntity.getNumberDouble());
+        assertEquals( Double.valueOf( "8.8888888"), targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 1);
         assertEquals( null, targetEntity.getNumberDouble());
         targetEntity = ( TargetEntity) list.get( 2);
-        assertEquals( new Double( "9.9999999"), targetEntity.getNumberDouble());
+        assertEquals( Double.valueOf( "9.9999999"), targetEntity.getNumberDouble());
         assertEquals( 3, list.size());
 
         // No.12 マイナス範囲指定
@@ -451,11 +451,11 @@ public class ObjectsParserTest extends WorkbookTest {
         objectsParser.addPropertyParser( childNoParser);
         list = objectsParser.parse( sheet4, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Integer( "55"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "55"), targetEntity.getNumberInteger());
         assertEquals( "childName5", targetEntity.getChildEntity().getChildName());
         assertEquals( 5, targetEntity.getChildEntity().getChildNo());
         targetEntity = ( TargetEntity) list.get( 1);
-        assertEquals( new Integer( "66"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "66"), targetEntity.getNumberInteger());
         assertEquals( "childName6", targetEntity.getChildEntity().getChildName());
         assertEquals( 6, targetEntity.getChildEntity().getChildNo());
         assertEquals( 2, list.size());
@@ -466,10 +466,10 @@ public class ObjectsParserTest extends WorkbookTest {
         objectsParser.clearPropertyParsers();
         list = objectsParser.parse( sheet4, tagCell, data);
         targetEntity = ( TargetEntity) list.get( 0);
-        assertEquals( new Integer( "77"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "77"), targetEntity.getNumberInteger());
         assertEquals( null, targetEntity.getChildEntity());
         targetEntity = ( TargetEntity) list.get( 1);
-        assertEquals( new Integer( "88"), targetEntity.getNumberInteger());
+        assertEquals( Integer.valueOf( "88"), targetEntity.getNumberInteger());
         assertEquals( null, targetEntity.getChildEntity());
         assertEquals( 2, list.size());
 

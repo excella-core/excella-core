@@ -91,7 +91,7 @@ public class PoiUtilTest extends WorkbookTest {
         // getCellValue(Cell cell)
         // ===============================================
         Object object = PoiUtil.getCellValue( sheet_1.getRow( 0).getCell( 0));
-        assertEquals( new Double( 10.0), object);
+        assertEquals( 10.0, object);
 
         // ===============================================
         // getCellValue(Cell cell, Class<?> propertyClass)
@@ -203,7 +203,7 @@ public class PoiUtilTest extends WorkbookTest {
         cellValue = PoiUtil.getCellValue( sheet_1, 4, 0);
         if ( workbook instanceof HSSFWorkbook) {
             // #N/Aのエラーコード
-            assertEquals( new Byte( "42"), cellValue);
+            assertEquals( ( byte)42, cellValue);
         } else if ( workbook instanceof XSSFWorkbook) {
             // XSSF形式の場合はエラーの文字列を返却
             assertEquals( "#N/A", cellValue);
@@ -234,7 +234,7 @@ public class PoiUtilTest extends WorkbookTest {
         // #N/Aを返却
         if ( workbook instanceof HSSFWorkbook) {
             // #N/Aのエラーコード
-            assertEquals( new Byte( "42"), cellValue);
+            assertEquals( ( byte)42, cellValue);
         } else if ( workbook instanceof XSSFWorkbook) {
             // XSSF形式の場合はエラーの文字列を返却
             assertEquals( "#N/A", cellValue);
@@ -246,7 +246,7 @@ public class PoiUtilTest extends WorkbookTest {
 
         // CELL_TYPE_FORMULA -> CELL_TYPE_BLANK
         cellValue = PoiUtil.getCellValue( sheet_1, 12, 0);
-        assertEquals( new Double( 0.0), cellValue);
+        assertEquals( 0.0, cellValue);
 
         // ===============================================
         // crossRangeAddress( CellRangeAddress baseAddress, CellRangeAddress targetAddress)
@@ -748,8 +748,8 @@ public class PoiUtilTest extends WorkbookTest {
         Cell cellNull = sheet_5.getRow( 1).getCell( 5);
 
         String stringValue = "aaa";
-        Number numberValue = new Double( 10);
-        Float floatValue = new Float( 10f);
+        Number numberValue = 10.0;
+        Float floatValue = 10.0f;
         Date dateValue = new Date();
         Boolean booleanValue = Boolean.TRUE;
 
@@ -762,7 +762,7 @@ public class PoiUtilTest extends WorkbookTest {
 
         assertEquals( stringValue, cellString.getStringCellValue());
         assertEquals( numberValue, cellNumber.getNumericCellValue());
-        assertEquals( new Double( String.valueOf( floatValue)), ( Double) cellFloat.getNumericCellValue());
+        assertEquals( Double.valueOf( String.valueOf( floatValue)), ( Double) cellFloat.getNumericCellValue());
         assertEquals( dateValue, cellDate.getDateCellValue());
         assertEquals( booleanValue, cellBoolean.getBooleanCellValue());
         assertNull( PoiUtil.getCellValue( cellNull));
