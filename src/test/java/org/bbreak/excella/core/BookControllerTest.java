@@ -20,6 +20,9 @@
 
 package org.bbreak.excella.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -35,8 +38,8 @@ import org.bbreak.excella.core.handler.DebugErrorHandler;
 import org.bbreak.excella.core.listener.SheetParseListener;
 import org.bbreak.excella.core.tag.excel2java.ListParser;
 import org.bbreak.excella.core.tag.excel2java.MapParser;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * BookControllerテストクラス
@@ -45,19 +48,11 @@ import org.junit.Test;
  */
 public class BookControllerTest extends WorkbookTest {
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version バージョン
-     */
-    public BookControllerTest( String version) {
-        super( version);
-     }
-    
-    @Test
-    public void testBookController() throws IOException, ParseException, ExportException {
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testBookController( String version) throws IOException, ParseException, ExportException {
         
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
 
         String filePath = getFilepath();
         
@@ -137,11 +132,12 @@ public class BookControllerTest extends WorkbookTest {
         
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
     @SuppressWarnings("unchecked")
-    public void testBookController2() throws ParseException, ExportException {
+    public void testBookController2( String version) throws ParseException, ExportException, IOException {
 
-        Workbook workbook = getWorkbook();
+        Workbook workbook = getWorkbook( version);
         BookController controller = new BookController( workbook);
         
         // ===============================================
@@ -163,11 +159,11 @@ public class BookControllerTest extends WorkbookTest {
         List<String> list2 = (List<String>) sheetData.get( "@List2");
         List<String> list3 = (List<String>) sheetData.get( "@List3");
         
-        Assert.assertEquals( "result1", list1.get( 0));
-        Assert.assertEquals( "result2", list1.get( 1));
-        Assert.assertNull( list2);
-        Assert.assertEquals( "result5", list3.get( 0));
-        Assert.assertEquals( "result6", list3.get( 1));
+        assertEquals( "result1", list1.get( 0));
+        assertEquals( "result2", list1.get( 1));
+        assertNull( list2);
+        assertEquals( "result5", list3.get( 0));
+        assertEquals( "result6", list3.get( 1));
         
         // ===============================================
         // clearTagParsers()
@@ -179,9 +175,9 @@ public class BookControllerTest extends WorkbookTest {
         list2 = (List<String>) sheetData.get( "@List2");
         list3 = (List<String>) sheetData.get( "@List3");
 
-        Assert.assertNull( list1);
-        Assert.assertNull( list2);
-        Assert.assertNull( list3);
+        assertNull( list1);
+        assertNull( list2);
+        assertNull( list3);
         
         // ===============================================
         // clearBookExporters()

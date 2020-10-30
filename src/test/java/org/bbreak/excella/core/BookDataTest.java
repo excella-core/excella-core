@@ -20,10 +20,15 @@
 
 package org.bbreak.excella.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collection;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * BookDataテストクラス
@@ -43,25 +48,25 @@ public class BookDataTest {
         // containsSheet(String sheetName)
         // ===============================================
         //存在するシート名
-        Assert.assertTrue( bookData.containsSheet( "Sheet1"));
+        assertTrue( bookData.containsSheet( "Sheet1"));
         //存在しないシート名
-        Assert.assertFalse( bookData.containsSheet( "hogehoge"));
+        assertFalse( bookData.containsSheet( "hogehoge"));
 
         
         // ===============================================
         // getSheetDatas()
         // ===============================================
         Collection<SheetData> collection = bookData.getSheetDatas();
-        Assert.assertEquals( sheetData, collection.iterator().next());
+        assertEquals( sheetData, collection.iterator().next());
         
         
         // ===============================================
         // putSheetData(String sheetName, SheetData sheetData)
         // ===============================================
         //存在するSheetData
-        Assert.assertSame( sheetData, bookData.putSheetData( "Sheet1", sheetData));
+        assertSame( sheetData, bookData.putSheetData( "Sheet1", sheetData));
         //存在しないSheetData
-        Assert.assertNotSame( sheetData, bookData.putSheetData( "Sheet4", sheetData));
+        assertNotSame( sheetData, bookData.putSheetData( "Sheet4", sheetData));
 
     }
     

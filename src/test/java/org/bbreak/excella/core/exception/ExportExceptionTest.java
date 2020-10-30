@@ -20,7 +20,9 @@
 
 package org.bbreak.excella.core.exception;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * ExportExceptionテストクラス
@@ -31,7 +33,10 @@ public class ExportExceptionTest {
     
     @Test
     public void testExportException() throws ExportException {
-        
+        assertDoesNotThrow(this::testExportExceptionImpl);
+    }
+    
+    private void testExportExceptionImpl() throws ExportException {
         Throwable throwable = new Throwable();
         new ExportException( throwable);
     }

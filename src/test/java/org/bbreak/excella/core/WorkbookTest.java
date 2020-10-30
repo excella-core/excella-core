@@ -21,52 +21,28 @@
 package org.bbreak.excella.core;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collection;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Workbookテストクラス
  * 
  * @since 1.0
  */
-@RunWith(Parameterized.class)
-public class WorkbookTest {
+public abstract class WorkbookTest {
     
-    /** Excelファイルのバージョン */
-    private String version = null;
-
     /** ファイルパス */
     private String filepath = null;
 
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public WorkbookTest( String version) {
-        this.version = version;
-    }
+    protected static final String VERSIONS = "2003, 2007";
 
-    @Parameters
-    public static Collection<?> parameters() {
-        return Arrays.asList( new Object[][] {{"2003"}, {"2007"}});
-    }
-
-    protected Workbook getWorkbook() {
+    protected Workbook getWorkbook( String version) throws IOException {
 
         Workbook workbook = null;
 
@@ -79,41 +55,17 @@ public class WorkbookTest {
         }
 
         URL url = this.getClass().getResource( filename);
-        try {
-            filepath = URLDecoder.decode( url.getFile(), "UTF-8");
+        filepath = URLDecoder.decode( url.getFile(), "UTF-8");
 
-            if ( filepath.endsWith( ".xlsx")) {
-                try {
-                    workbook = new XSSFWorkbook( filepath);
-                } catch ( IOException e) {
-                    Assert.fail();
-                }
-            } else if ( filepath.endsWith( ".xls")) {
-                FileInputStream stream = null;
-                try {
-                    stream = new FileInputStream( filepath);
-                } catch ( FileNotFoundException e) {
-                    Assert.fail();
-                }
-                POIFSFileSystem fs = null;
-                try {
-                    fs = new POIFSFileSystem( stream);
-                } catch ( IOException e) {
-                    Assert.fail();
-                }
-                try {
-                    workbook = new HSSFWorkbook( fs);
-                } catch ( IOException e) {
-                    Assert.fail();
-                }
-                try {
-                    stream.close();
-                } catch ( IOException e) {
-                    Assert.fail();
-                }
-            }
-        } catch ( UnsupportedEncodingException e) {
-            Assert.fail();
+        if ( filepath.endsWith( ".xlsx")) {
+            workbook = new XSSFWorkbook( filepath);
+        } else if ( filepath.endsWith( ".xls")) {
+            FileInputStream stream = null;
+            stream = new FileInputStream( filepath);
+            POIFSFileSystem fs = null;
+            fs = new POIFSFileSystem( stream);
+            workbook = new HSSFWorkbook( fs);
+            stream.close();
         }
         return workbook;
     }

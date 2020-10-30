@@ -44,6 +44,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Hyperlink;
@@ -258,7 +259,7 @@ public final class PoiUtil {
                 } else if ( propertyClass.equals( Double.class)) {
                     return number.doubleValue();
                 } else if ( propertyClass.equals( BigDecimal.class)) {
-                    return new BigDecimal( number.doubleValue());
+                    return new BigDecimal( new DataFormatter().formatCellValue( cell));
                 } else if ( propertyClass.equals( Byte.class)) {
                     return new Byte( number.byteValue());
                 } else {

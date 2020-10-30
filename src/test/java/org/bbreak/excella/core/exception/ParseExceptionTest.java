@@ -20,11 +20,15 @@
 
 package org.bbreak.excella.core.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.bbreak.excella.core.WorkbookTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * ExportExceptionテストクラス
@@ -32,19 +36,11 @@ import org.junit.Test;
  * @since 1.0
  */
 public class ParseExceptionTest extends WorkbookTest {
-    
-    /**
-     * コンストラクタ
-     * 
-     * @param version Excelファイルのバージョン
-     */
-    public ParseExceptionTest( String version) {
-        super( version);
-    }
 
-    @Test
-    public void testParseException() {
-        Workbook workbook = getWorkbook();
+    @ParameterizedTest
+    @CsvSource( WorkbookTest.VERSIONS)
+    public void testParseException( String version) throws IOException {
+        Workbook workbook = getWorkbook( version);
 
         String message = "test message";
         Cell cell = workbook.getSheetAt( 0).getRow( 0).getCell( 0);
@@ -92,7 +88,7 @@ public class ParseExceptionTest extends WorkbookTest {
         // setCell(Cell cell)
         // ===============================================
         ex.setCell( cell);
-        Assert.assertEquals(ex.getCell(), cell);
+        assertEquals(ex.getCell(), cell);
         
     }
 
