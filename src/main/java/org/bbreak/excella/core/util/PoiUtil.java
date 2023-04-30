@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.ss.SpreadsheetVersion;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -496,6 +494,8 @@ public final class PoiUtil {
 
         }
 
+        Workbook toWorkbook = toSheet.getWorkbook();
+
         for ( int i = rangeAddress.getFirstRow(); i <= rangeAddress.getLastRow(); i++) {
             // 行
             Row fromRow = baseSheet.getRow( i);
@@ -517,7 +517,7 @@ public final class PoiUtil {
 
             ColumnHelper columnHelper = null;
             if ( toSheet instanceof XSSFSheet) {
-                XSSFSheet xssfSheet = ( XSSFSheet) toSheet.getWorkbook().getSheetAt( toSheet.getWorkbook().getSheetIndex( toSheet));
+                XSSFSheet xssfSheet = (XSSFSheet) toSheet;
                 CTWorksheet ctWorksheet = xssfSheet.getCTWorksheet();
                 columnHelper = new ColumnHelper( ctWorksheet);
              }
@@ -527,10 +527,7 @@ public final class PoiUtil {
                 if ( fromCell == null) {
                     continue;
                 }
-                int maxColumn = SpreadsheetVersion.EXCEL97.getMaxColumns();
-                if ( toSheet instanceof XSSFSheet) {
-                	maxColumn = SpreadsheetVersion.EXCEL2007.getMaxColumns();
-                }
+                int maxColumn = toWorkbook.getSpreadsheetVersion().getMaxColumns();
                 if(j + columnNumOffset >= maxColumn){
                 	break;
                 }
@@ -723,12 +720,7 @@ public final class PoiUtil {
         Set<CellRangeAddress> targetCellSet = new HashSet<CellRangeAddress>();
         int fromSheetMargNums = sheet.getNumMergedRegions();
         for ( int i = 0; i < fromSheetMargNums; i++) {
-            CellRangeAddress mergedAddress = null;
-            if ( sheet instanceof XSSFSheet) {
-                mergedAddress = (( XSSFSheet) sheet).getMergedRegion( i);
-            } else if ( sheet instanceof HSSFSheet) {
-                mergedAddress = (( HSSFSheet) sheet).getMergedRegion( i);
-            }
+            CellRangeAddress mergedAddress = sheet.getMergedRegion(i);
 
             // fromAddressに入ってるか
             if ( crossRangeAddress( rangeAddress, mergedAddress)) {
@@ -814,12 +806,7 @@ public final class PoiUtil {
         int fromSheetMargNums = sheet.getNumMergedRegions();
         for ( int i = 0; i < fromSheetMargNums; i++) {
 
-            CellRangeAddress mergedAddress = null;
-            if ( sheet instanceof XSSFSheet) {
-                mergedAddress = (( XSSFSheet) sheet).getMergedRegion( i);
-            } else if ( sheet instanceof HSSFSheet) {
-                mergedAddress = (( HSSFSheet) sheet).getMergedRegion( i);
-            }
+            CellRangeAddress mergedAddress = sheet.getMergedRegion(i);
 
             for ( CellRangeAddress address : clearMergedCellSet) {
                 if ( mergedAddress.formatAsString().equals( address.formatAsString())) {

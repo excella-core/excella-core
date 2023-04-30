@@ -20,18 +20,16 @@
 
 package org.bbreak.excella.core;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.bbreak.excella.core.exception.ExportException;
 import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.exporter.book.BookExporter;
@@ -94,16 +92,7 @@ public class BookController {
         if ( log.isInfoEnabled()) {
             log.info( filepath + "の読み込みを開始します");
         }
-        if ( filepath.endsWith( XSSF_SUFFIX)) {
-            // XSSF形式
-            workbook = new XSSFWorkbook( filepath);
-        } else {
-            // HSSF形式
-            FileInputStream stream = new FileInputStream( filepath);
-            POIFSFileSystem fs = new POIFSFileSystem( stream);
-            workbook = new HSSFWorkbook( fs);
-            stream.close();
-        }
+        workbook = WorkbookFactory.create(new File(filepath));
 
         // シート名を解析
         int numOfSheets = workbook.getNumberOfSheets();
