@@ -22,16 +22,14 @@ package org.bbreak.excella.core.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFComment;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -84,47 +82,34 @@ public class DebugErrorHandler implements ParseErrorHandler {
         workbook.setActiveSheet( workbook.getSheetIndex( errorCell.getSheet()));
         errorCell.setAsActiveCell();
 
-        if ( workbook instanceof XSSFWorkbook) {
-            XSSFWorkbook xssfWorkbook = ( XSSFWorkbook) workbook;
+        // エラーセルに背景色を設定
+        CellStyle errorCellStyle = workbook.createCellStyle();
+        errorCellStyle.setFillForegroundColor(IndexedColors.ROSE.getIndex());
+        errorCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        errorCell.setCellStyle(errorCellStyle);
 
-            CellStyle errorCellStyle = xssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
-            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
-            errorCell.setCellStyle( errorCellStyle);
+        // エラーセルにコメントを追加
+        short commentColFrom = (short) (errorCell.getColumnIndex() + 1);
+        short commentColTo = (short) (errorCell.getColumnIndex() + ERROR_COMENT_COL_SIZE);
+        int commentRowFrom = errorCell.getRowIndex();
+        int commentRowTo = errorCell.getRowIndex() + ERROR_COMENT_ROW_SIZE;
 
-            // TODO:コメントをつけたいけど、うまくいかない。。。
-            // XSSFComment xssfComment = ((XSSFSheet)sheet).createComment();
-            // xssfComment.setRow( errorCell.getRowIndex());
-            // xssfComment.setColumn( (short)errorCell.getColumnIndex());
-            // XSSFRichTextString string = new XSSFRichTextString( ex.getMessage());
-            // xssfComment.setString( ex.getMessage());
-        } else {
-            HSSFWorkbook hssfWorkbook = ( HSSFWorkbook) workbook;
-            int sheetNum = hssfWorkbook.getNumberOfSheets();
-            for ( int cnt = 0; cnt < sheetNum; cnt++) {
-                hssfWorkbook.getSheetAt( cnt).setSelected( false);
-            }
+        Sheet sheet = errorCell.getSheet();
+        Drawing<?> drawing = sheet.createDrawingPatriarch();
+        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, commentColFrom, commentRowFrom, commentColTo,
+                commentRowTo);
+        Comment comment = drawing.createCellComment(anchor);
+        comment.setVisible(true);
+        RichTextString richText = workbook.getCreationHelper()
+                .createRichTextString(createCommentMessage(exception));
+        comment.setString(richText);
+        errorCell.setCellComment(comment);
 
-            // エラーセルに背景色を設定
-            CellStyle errorCellStyle = hssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
-            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
-            errorCell.setCellStyle( errorCellStyle);
-
-            // エラーセルにコメントを追加
-            short commentColFrom = ( short) (errorCell.getColumnIndex() + 1);
-            short commentColTo = ( short) (errorCell.getColumnIndex() + ERROR_COMENT_COL_SIZE);
-            int commentRowFrom = errorCell.getRowIndex();
-            int commentRowTo = errorCell.getRowIndex() + ERROR_COMENT_ROW_SIZE;
-
-            HSSFSheet hssfSheet = ( HSSFSheet) errorCell.getSheet();
-            HSSFPatriarch patr = hssfSheet.createDrawingPatriarch();
-            hssfSheet.setSelected( true);
-            HSSFComment comment = patr.createComment( new HSSFClientAnchor( 0, 0, 0, 0, commentColFrom, commentRowFrom, commentColTo, commentRowTo));
-            comment.setVisible( true);
-            comment.setString( new HSSFRichTextString( createCommentMessage( exception)));
-            errorCell.setCellComment( comment);
+        // エラーセルがあるシートを選択する
+        for (Sheet ss : workbook) {
+            ss.setSelected(false);
         }
+        sheet.setSelected(true);
     }
 
     /**
