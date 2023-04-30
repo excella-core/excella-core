@@ -37,9 +37,9 @@ import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.exporter.book.BookExporter;
 import org.bbreak.excella.core.exporter.sheet.SheetExporter;
 import org.bbreak.excella.core.handler.ParseErrorHandler;
+import org.bbreak.excella.core.listener.PostSheetParseListener;
+import org.bbreak.excella.core.listener.PreSheetParseListener;
 import org.bbreak.excella.core.listener.SheetParseListener;
-import org.bbreak.excella.core.listener.SheetPostParseListener;
-import org.bbreak.excella.core.listener.SheetPreParseListener;
 import org.bbreak.excella.core.tag.TagParser;
 
 /**
@@ -71,10 +71,10 @@ public class BookController {
     private List<SheetTagParserInfo> tagParsers = new ArrayList<SheetTagParserInfo>();
 
     /** シート解析イベント処理リスナ(pre parse) */
-    private List<SheetListenerInfo<SheetPreParseListener>> preParseListeners = new ArrayList<>();
+    private List<SheetListenerInfo<PreSheetParseListener>> preParseListeners = new ArrayList<>();
 
     /** シート解析イベント処理リスナ(post parse) */
-    private List<SheetListenerInfo<SheetPostParseListener>> postParseListeners = new ArrayList<>();
+    private List<SheetListenerInfo<PostSheetParseListener>> postParseListeners = new ArrayList<>();
 
     /** ブック解析結果出力クラス */
     private List<BookExporter> bookExporters = new ArrayList<BookExporter>();
@@ -238,7 +238,7 @@ public class BookController {
             }
 
             // シート処理前イベントの通知
-            for ( SheetListenerInfo<SheetPreParseListener> listenerInfo : preParseListeners) {
+            for ( SheetListenerInfo<PreSheetParseListener> listenerInfo : preParseListeners) {
                 String targetSheetName = listenerInfo.getSheetName();
                 if ( targetSheetName == null || targetSheetName.equals( sheetName)) {
                     listenerInfo.getListener().preParse( sheet, sheetParser);
@@ -249,7 +249,7 @@ public class BookController {
             sheetData = sheetParser.parseSheet( sheet, data);
 
             // シート処理後イベントの通知
-            for ( SheetListenerInfo<SheetPostParseListener> listnerInfo : postParseListeners) {
+            for ( SheetListenerInfo<PostSheetParseListener> listnerInfo : postParseListeners) {
                 String targetSheetName = listnerInfo.getSheetName();
                 if ( targetSheetName == null || targetSheetName.equals( sheetName)) {
                     listnerInfo.getListener().postParse( sheet, sheetParser, sheetData);
@@ -339,8 +339,8 @@ public class BookController {
      * @param listener 追加するリスナ
      */
     public void addSheetParseListener( SheetParseListener listener) {
-        addSheetPreParseListener( listener);
-        addSheetPostParseListener( listener);
+        addPreSheetParseListener( listener);
+        addPostSheetParseListener( listener);
     }
 
     /**
@@ -350,16 +350,16 @@ public class BookController {
      * @param listener 追加するリスナ
      */
     public void addSheetParseListener( String sheetName, SheetParseListener listener) {
-        addSheetPreParseListener( sheetName, listener);
-        addSheetPostParseListener( sheetName, listener);
+        addPreSheetParseListener( sheetName, listener);
+        addPostSheetParseListener( sheetName, listener);
     }
 
     /**
      * 全てのシート処理リスナを削除する
      */
     public void clearSheetParseListeners() {
-        clearSheetPreParseListeners();
-        clearSheetPostParseListeners();
+        clearPreSheetParseListeners();
+        clearPostSheetParseListeners();
     }
     
     /**
@@ -368,7 +368,7 @@ public class BookController {
      * @param listener 追加するリスナ
      * @since 2.1
      */
-    public void addSheetPreParseListener( SheetPreParseListener listener) {
+    public void addPreSheetParseListener( PreSheetParseListener listener) {
         preParseListeners.add( new SheetListenerInfo<>( listener));
     }
 
@@ -379,7 +379,7 @@ public class BookController {
      * @param listener 追加するリスナ
      * @since 2.1
      */
-    public void addSheetPreParseListener( String sheetName, SheetPreParseListener listener) {
+    public void addPreSheetParseListener( String sheetName, PreSheetParseListener listener) {
         preParseListeners.add( new SheetListenerInfo<>( sheetName, listener));
     }
 
@@ -388,7 +388,7 @@ public class BookController {
      * 
      * @since 2.1
      */
-    public void clearSheetPreParseListeners() {
+    public void clearPreSheetParseListeners() {
         preParseListeners.clear();
     }
 
@@ -398,7 +398,7 @@ public class BookController {
      * @param listener 追加するリスナ
      * @since 2.1
      */
-    public void addSheetPostParseListener( SheetPostParseListener listener) {
+    public void addPostSheetParseListener( PostSheetParseListener listener) {
         postParseListeners.add( new SheetListenerInfo<>( listener));
     }
 
@@ -409,7 +409,7 @@ public class BookController {
      * @param listener 追加するリスナ
      * @since 2.1
      */
-    public void addSheetPostParseListener( String sheetName, SheetPostParseListener listener) {
+    public void addPostSheetParseListener( String sheetName, PostSheetParseListener listener) {
         postParseListeners.add( new SheetListenerInfo<>( sheetName, listener));
     }
 
@@ -418,7 +418,7 @@ public class BookController {
      * 
      * @since 2.1
      */
-    public void clearSheetPostParseListeners() {
+    public void clearPostSheetParseListeners() {
         postParseListeners.clear();
     }
 

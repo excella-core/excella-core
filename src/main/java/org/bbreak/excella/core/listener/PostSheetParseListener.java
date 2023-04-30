@@ -31,7 +31,7 @@ import org.bbreak.excella.core.exception.ParseException;
  * @since 2.1
  */
 @FunctionalInterface
-public interface SheetPostParseListener {
+public interface PostSheetParseListener {
 
     /**
      * シート解析後に呼び出されるメソッド

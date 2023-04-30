@@ -30,7 +30,7 @@ import org.bbreak.excella.core.exception.ParseException;
  * @since 2.1
  */
 @FunctionalInterface
-public interface SheetPreParseListener {
+public interface PreSheetParseListener {
 
     /**
      * シート解析前に呼び出されるメソッド

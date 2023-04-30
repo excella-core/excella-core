@@ -25,6 +25,6 @@ package org.bbreak.excella.core.listener;
  * 
  * @since 1.0
  */
-public interface SheetParseListener extends SheetPreParseListener, SheetPostParseListener {
+public interface SheetParseListener extends PreSheetParseListener, PostSheetParseListener {
 
 }
