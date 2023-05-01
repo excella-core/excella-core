@@ -69,7 +69,7 @@ public final class PoiUtil {
      */
     private PoiUtil() {
     }
-    
+
     /** 一時テンプレートシート名 */
     public static final String TMP_SHEET_NAME = "-@%delete%_tmpSheet";
 
@@ -152,10 +152,7 @@ public final class PoiUtil {
     }
 
     /**
-     * DateUtilがLocalizeされたフォーマット(年,月,日等を含むフォーマット)に対応していないため、
-     * フォーマットの""で囲まれた文字列を除去するようにして対応。
-     * DateUtilが対応されたらそっちを使用する。 
-     * Bug 47071として報告済み
+     * DateUtilがLocalizeされたフォーマット(年,月,日等を含むフォーマット)に対応していないため、 フォーマットの""で囲まれた文字列を除去するようにして対応。 DateUtilが対応されたらそっちを使用する。 Bug 47071として報告済み
      * 
      * @param cell 対象セル
      */
@@ -367,11 +364,12 @@ public final class PoiUtil {
      * @param toCell コピー先セル
      */
     public static void copyCell( Cell fromCell, Cell toCell) {
-    	copyCell(fromCell, toCell, true, true);
+        copyCell( fromCell, toCell, true, true);
     }
-    
+
     /**
      * セルをコピーする。
+     * 
      * @param fromCell コピー元セル
      * @param toCell コピー先セル
      * @param copyStyle trueの時スタイルのコピーを行う
@@ -406,7 +404,7 @@ public final class PoiUtil {
             }
 
             // スタイル
-            if ( canCopyStyle(fromCell,toCell) && copyStyle) {
+            if ( canCopyStyle( fromCell, toCell) && copyStyle) {
                 toCell.setCellStyle( fromCell.getCellStyle());
             }
 
@@ -416,17 +414,17 @@ public final class PoiUtil {
             }
         }
     }
-    
+
     /**
      * スタイルのコピーが可能か判定
-     * @param fromCell　コピー元セル
-     * @param toCell　コピー先セル
-     * @return　スタイルのコピー可否
+     * 
+     * @param fromCell コピー元セル
+     * @param toCell コピー先セル
+     * @return スタイルのコピー可否
      */
-    private static boolean canCopyStyle(Cell fromCell, Cell toCell){
-    	//コピー元のスタイルがnullではない。かつ、同ワークブックであるかどうか。
-    	return fromCell.getCellStyle() != null
-                && fromCell.getSheet().getWorkbook().equals(toCell.getSheet().getWorkbook());
+    private static boolean canCopyStyle( Cell fromCell, Cell toCell) {
+        // コピー元のスタイルがnullではない。かつ、同ワークブックであるかどうか。
+        return fromCell.getCellStyle() != null && fromCell.getSheet().getWorkbook().equals( toCell.getSheet().getWorkbook());
     }
 
     /**
@@ -467,10 +465,10 @@ public final class PoiUtil {
                 tmpSheet = fromWorkbook.createSheet( TMP_SHEET_NAME);
             }
             baseSheet = tmpSheet;
-            
-            int lastColNum = getLastColNum(fromSheet);
-            for(int i = 0; i <= lastColNum; i++){
-            	tmpSheet.setColumnWidth(i, fromSheet.getColumnWidth(i));
+
+            int lastColNum = getLastColNum( fromSheet);
+            for ( int i = 0; i <= lastColNum; i++) {
+                tmpSheet.setColumnWidth( i, fromSheet.getColumnWidth( i));
             }
 
             copyRange( fromSheet, rangeAddress, tmpSheet, rangeAddress.getFirstRow(), rangeAddress.getFirstColumn(), false);
@@ -517,10 +515,10 @@ public final class PoiUtil {
 
             ColumnHelper columnHelper = null;
             if ( toSheet instanceof XSSFSheet) {
-                XSSFSheet xssfSheet = (XSSFSheet) toSheet;
+                XSSFSheet xssfSheet = ( XSSFSheet) toSheet;
                 CTWorksheet ctWorksheet = xssfSheet.getCTWorksheet();
                 columnHelper = new ColumnHelper( ctWorksheet);
-             }
+            }
 
             for ( int j = rangeAddress.getFirstColumn(); j <= rangeAddress.getLastColumn(); j++) {
                 Cell fromCell = fromRow.getCell( j);
@@ -528,8 +526,8 @@ public final class PoiUtil {
                     continue;
                 }
                 int maxColumn = toWorkbook.getSpreadsheetVersion().getMaxColumns();
-                if(j + columnNumOffset >= maxColumn){
-                	break;
+                if ( j + columnNumOffset >= maxColumn) {
+                    break;
                 }
                 Cell cell = row.getCell( j + columnNumOffset);
                 if ( cell == null) {
@@ -720,7 +718,7 @@ public final class PoiUtil {
         Set<CellRangeAddress> targetCellSet = new HashSet<CellRangeAddress>();
         int fromSheetMargNums = sheet.getNumMergedRegions();
         for ( int i = 0; i < fromSheetMargNums; i++) {
-            CellRangeAddress mergedAddress = sheet.getMergedRegion(i);
+            CellRangeAddress mergedAddress = sheet.getMergedRegion( i);
 
             // fromAddressに入ってるか
             if ( crossRangeAddress( rangeAddress, mergedAddress)) {
@@ -806,7 +804,7 @@ public final class PoiUtil {
         int fromSheetMargNums = sheet.getNumMergedRegions();
         for ( int i = 0; i < fromSheetMargNums; i++) {
 
-            CellRangeAddress mergedAddress = sheet.getMergedRegion(i);
+            CellRangeAddress mergedAddress = sheet.getMergedRegion( i);
 
             for ( CellRangeAddress address : clearMergedCellSet) {
                 if ( mergedAddress.formatAsString().equals( address.formatAsString())) {
@@ -943,8 +941,7 @@ public final class PoiUtil {
     }
 
     /**
-     * エクセルシート内のデータのあるセルの 最大列のインデックスを取得する。 
-     * A列を0とする。対象セルがない場合は-1を返す。
+     * エクセルシート内のデータのあるセルの 最大列のインデックスを取得する。 A列を0とする。対象セルがない場合は-1を返す。
      * 
      * @param sheet シート
      * @return データのあるセルの最大列のインデックス

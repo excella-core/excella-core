@@ -92,7 +92,7 @@ public class BookController {
         if ( log.isInfoEnabled()) {
             log.info( filepath + "の読み込みを開始します");
         }
-        workbook = WorkbookFactory.create(new File(filepath));
+        workbook = WorkbookFactory.create( new File( filepath));
 
         // シート名を解析
         int numOfSheets = workbook.getNumberOfSheets();
@@ -130,9 +130,7 @@ public class BookController {
     /**
      * ブックに含まれる全シート(コメントシートを除く)の解析の実行
      * 
-     * @param data BookControllerのparseBook(), parseSheet()メソッド、 
-     *                SheetParserのparseSheetメソッドで引数を渡した場合に
-     *                TagParserまで引き継がれる処理データ
+     * @param data BookControllerのparseBook(), parseSheet()メソッド、 SheetParserのparseSheetメソッドで引数を渡した場合に TagParserまで引き継がれる処理データ
      * @throws ParseException パースに失敗した場合
      * @throws ExportException 出力処理に失敗した場合
      */
@@ -195,9 +193,7 @@ public class BookController {
      * シートデータの解析
      * 
      * @param sheetName 解析対象のシート名
-     * @param data BookControllerのparseBook(), parseSheet()メソッド、 
-     *                SheetParserのparseSheetメソッドで引数を渡した場合に
-     *                TagParserまで引き継がれる処理データ
+     * @param data BookControllerのparseBook(), parseSheet()メソッド、 SheetParserのparseSheetメソッドで引数を渡した場合に TagParserまで引き継がれる処理データ
      * @return シートの解析結果
      * @throws ParseException パース処理エラー
      * @throws ExportException エクスポート処理エラー
@@ -302,21 +298,21 @@ public class BookController {
      */
     public void removeTagParser( String tag) {
         List<SheetTagParserInfo> removeList = new ArrayList<SheetTagParserInfo>();
-        for (SheetTagParserInfo sheetTagParserInfo : tagParsers) {
-            if (sheetTagParserInfo.getParser().getTag().equals( tag)) {
+        for ( SheetTagParserInfo sheetTagParserInfo : tagParsers) {
+            if ( sheetTagParserInfo.getParser().getTag().equals( tag)) {
                 removeList.add( sheetTagParserInfo);
             }
         }
         tagParsers.removeAll( removeList);
     }
-    
+
     /**
      * すべてのタグパーサを削除する
      */
     public void clearTagParsers() {
         tagParsers.clear();
     }
-    
+
     /**
      * シート処理リスナの追加
      * 
@@ -342,7 +338,7 @@ public class BookController {
     public void clearSheetParseListeners() {
         sheetListeners.clear();
     }
-    
+
     /**
      * 出力処理クラスの取得
      * 
@@ -377,7 +373,7 @@ public class BookController {
     public void clearSheetExporters() {
         sheetExporters.clear();
     }
-    
+
     /**
      * エラーハンドラの取得
      * 
@@ -411,7 +407,7 @@ public class BookController {
     public void clearBookExporters() {
         bookExporters.clear();
     }
-    
+
     /**
      * シートごとのパーサ情報を保持するクラス
      * 

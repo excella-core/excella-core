@@ -40,9 +40,9 @@ import org.junit.runners.Parameterized.Parameters;
  * 
  * @since 1.0
  */
-@RunWith(Parameterized.class)
+@RunWith( Parameterized.class)
 public class WorkbookTest {
-    
+
     /** Excelファイルのバージョン */
     private String version = null;
 
@@ -77,10 +77,10 @@ public class WorkbookTest {
 
         URL url = this.getClass().getResource( filename);
         try {
-            filepath = URLDecoder.decode(url.getFile(), "UTF-8");
-            workbook = WorkbookFactory.create(new File(url.getFile()));
-        } catch (IOException | EncryptedDocumentException e) {
-            Assert.fail(e.toString());
+            filepath = URLDecoder.decode( url.getFile(), "UTF-8");
+            workbook = WorkbookFactory.create( new File( url.getFile()));
+        } catch ( IOException | EncryptedDocumentException e) {
+            Assert.fail( e.toString());
         }
         return workbook;
     }

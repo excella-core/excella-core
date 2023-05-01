@@ -86,12 +86,12 @@ public class DebugErrorHandler implements ParseErrorHandler {
 
         // エラーセルに背景色を設定
         CellStyle errorCellStyle = workbook.createCellStyle();
-        errorCellStyle.setFillForegroundColor(IndexedColors.ROSE.getIndex());
-        errorCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        errorCell.setCellStyle(errorCellStyle);
+        errorCellStyle.setFillForegroundColor( IndexedColors.ROSE.getIndex());
+        errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
+        errorCell.setCellStyle( errorCellStyle);
 
-        if (workbook instanceof XSSFWorkbook) {
-            XSSFWorkbook xssfWorkbook = (XSSFWorkbook) workbook;
+        if ( workbook instanceof XSSFWorkbook) {
+            XSSFWorkbook xssfWorkbook = ( XSSFWorkbook) workbook;
 
             // TODO:コメントをつけたいけど、うまくいかない。。。
             // XSSFComment xssfComment = ((XSSFSheet)sheet).createComment();
@@ -130,9 +130,9 @@ public class DebugErrorHandler implements ParseErrorHandler {
      */
     protected String createCommentMessage( ParseException exception) {
         StringBuilder commentMessageBuf = new StringBuilder();
-        
-        if( exception.getMessage() != null){
-            commentMessageBuf.append( exception.getMessage());            
+
+        if ( exception.getMessage() != null) {
+            commentMessageBuf.append( exception.getMessage());
         }
         if ( exception.getCause() != null) {
             commentMessageBuf.append( "\n");
