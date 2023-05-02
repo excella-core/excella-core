@@ -37,6 +37,7 @@ public interface PreSheetParseListener {
      * 
      * @param sheet 対象シート
      * @param sheetParser 対象パーサ
+     * @throws ParseException 解析処理を中断しなければならない問題が生じた場合
      */
     void preParse( Sheet sheet, SheetParser sheetParser) throws ParseException;
 

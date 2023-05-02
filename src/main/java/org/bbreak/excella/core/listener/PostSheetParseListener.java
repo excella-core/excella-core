@@ -39,6 +39,7 @@ public interface PostSheetParseListener {
      * @param sheet 対象シート
      * @param sheetParser 対象パーサ
      * @param sheetData 解析結果
+     * @throws ParseException 解析処理を中断しなければならない問題が生じた場合
      */
     void postParse( Sheet sheet, SheetParser sheetParser, SheetData sheetData) throws ParseException;
 
