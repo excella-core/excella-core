@@ -20,6 +20,8 @@ jobs:
           sudo locale-gen ${LANG}
           sudo update-locale LANG=${LANG}
       - uses: actions/checkout@v3
+        with:
+          depth: 0
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
