@@ -6,6 +6,7 @@ on:
 
 env:
   LANG: ja_JP.UTF-8
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   build:
