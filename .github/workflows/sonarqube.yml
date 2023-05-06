@@ -1,0 +1,32 @@
+name: SonarCloud scan
+on:
+  push:
+    branches:
+      - master
+
+env:
+  LANG: ja_JP.UTF-8
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: SonarCloud scan
+    if: github.repository == 'excella-core/excella-core'
+
+    steps:
+      - name: Set locale
+        run: |
+          sudo locale-gen ${LANG}
+          sudo update-locale LANG=${LANG}
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: maven
+      - name: Prepare configuration
+        run: sed s/SONAR_TOKEN/env.SONAR_TOKEN/ dev/settings-sonarqube.default.xml | tee dev/settings-sonarqube.xml
+      - name: Scan with SonarCloud
+        run: mvn -B -V clean jacoco:prepare-agent verify jacoco:report sonar:sonar -Dmaven.javadoc.failOnError=false -s dev/settings-sonarqube.xml
+
