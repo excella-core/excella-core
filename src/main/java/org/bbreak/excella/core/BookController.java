@@ -20,18 +20,16 @@
 
 package org.bbreak.excella.core;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.bbreak.excella.core.exception.ExportException;
 import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.exporter.book.BookExporter;
@@ -99,16 +97,7 @@ public class BookController {
         if ( log.isInfoEnabled()) {
             log.info( filepath + "の読み込みを開始します");
         }
-        if ( filepath.endsWith( XSSF_SUFFIX)) {
-            // XSSF形式
-            workbook = new XSSFWorkbook( filepath);
-        } else {
-            // HSSF形式
-            FileInputStream stream = new FileInputStream( filepath);
-            POIFSFileSystem fs = new POIFSFileSystem( stream);
-            workbook = new HSSFWorkbook( fs);
-            stream.close();
-        }
+        workbook = WorkbookFactory.create( new File( filepath));
 
         // シート名を解析
         int numOfSheets = workbook.getNumberOfSheets();
@@ -146,9 +135,7 @@ public class BookController {
     /**
      * ブックに含まれる全シート(コメントシートを除く)の解析の実行
      * 
-     * @param data BookControllerのparseBook(), parseSheet()メソッド、 
-     *                SheetParserのparseSheetメソッドで引数を渡した場合に
-     *                TagParserまで引き継がれる処理データ
+     * @param data BookControllerのparseBook(), parseSheet()メソッド、 SheetParserのparseSheetメソッドで引数を渡した場合に TagParserまで引き継がれる処理データ
      * @throws ParseException パースに失敗した場合
      * @throws ExportException 出力処理に失敗した場合
      */
@@ -211,9 +198,7 @@ public class BookController {
      * シートデータの解析
      * 
      * @param sheetName 解析対象のシート名
-     * @param data BookControllerのparseBook(), parseSheet()メソッド、 
-     *                SheetParserのparseSheetメソッドで引数を渡した場合に
-     *                TagParserまで引き継がれる処理データ
+     * @param data BookControllerのparseBook(), parseSheet()メソッド、 SheetParserのparseSheetメソッドで引数を渡した場合に TagParserまで引き継がれる処理データ
      * @return シートの解析結果
      * @throws ParseException パース処理エラー
      * @throws ExportException エクスポート処理エラー
@@ -318,21 +303,21 @@ public class BookController {
      */
     public void removeTagParser( String tag) {
         List<SheetTagParserInfo> removeList = new ArrayList<SheetTagParserInfo>();
-        for (SheetTagParserInfo sheetTagParserInfo : tagParsers) {
-            if (sheetTagParserInfo.getParser().getTag().equals( tag)) {
+        for ( SheetTagParserInfo sheetTagParserInfo : tagParsers) {
+            if ( sheetTagParserInfo.getParser().getTag().equals( tag)) {
                 removeList.add( sheetTagParserInfo);
             }
         }
         tagParsers.removeAll( removeList);
     }
-    
+
     /**
      * すべてのタグパーサを削除する
      */
     public void clearTagParsers() {
         tagParsers.clear();
     }
-    
+
     /**
      * シート処理リスナの追加
      * 
@@ -361,7 +346,7 @@ public class BookController {
         clearPreSheetParseListeners();
         clearPostSheetParseListeners();
     }
-    
+
     /**
      * シート処理前イベントリスナの追加
      * 
@@ -456,7 +441,7 @@ public class BookController {
     public void clearSheetExporters() {
         sheetExporters.clear();
     }
-    
+
     /**
      * エラーハンドラの取得
      * 
@@ -490,7 +475,7 @@ public class BookController {
     public void clearBookExporters() {
         bookExporters.clear();
     }
-    
+
     /**
      * シートごとのパーサ情報を保持するクラス
      * 
