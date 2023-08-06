@@ -20,11 +20,25 @@
 
 package org.bbreak.excella.core.listener;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.bbreak.excella.core.SheetParser;
+import org.bbreak.excella.core.exception.ParseException;
+
 /**
- * シート解析時のイベント通知リスナ
+ * シート解析前のイベント通知リスナ
  * 
- * @since 1.0
+ * @since 2.1
  */
-public interface SheetParseListener extends PreSheetParseListener, PostSheetParseListener {
+@FunctionalInterface
+public interface PreSheetParseListener {
+
+    /**
+     * シート解析前に呼び出されるメソッド
+     * 
+     * @param sheet 対象シート
+     * @param sheetParser 対象パーサ
+     * @throws ParseException 解析処理を中断しなければならない問題が生じた場合
+     */
+    void preParse( Sheet sheet, SheetParser sheetParser) throws ParseException;
 
 }

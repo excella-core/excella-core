@@ -35,6 +35,8 @@ import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.exporter.book.BookExporter;
 import org.bbreak.excella.core.exporter.sheet.SheetExporter;
 import org.bbreak.excella.core.handler.ParseErrorHandler;
+import org.bbreak.excella.core.listener.PostSheetParseListener;
+import org.bbreak.excella.core.listener.PreSheetParseListener;
 import org.bbreak.excella.core.listener.SheetParseListener;
 import org.bbreak.excella.core.tag.TagParser;
 
@@ -66,8 +68,11 @@ public class BookController {
     /** パーサーのリスト */
     private List<SheetTagParserInfo> tagParsers = new ArrayList<SheetTagParserInfo>();
 
-    /** シート解析イベント処理リスナ */
-    private List<SheetListenerInfo> sheetListeners = new ArrayList<SheetListenerInfo>();
+    /** シート解析イベント処理リスナ(pre parse) */
+    private List<SheetListenerInfo<PreSheetParseListener>> preParseListeners = new ArrayList<>();
+
+    /** シート解析イベント処理リスナ(post parse) */
+    private List<SheetListenerInfo<PostSheetParseListener>> postParseListeners = new ArrayList<>();
 
     /** ブック解析結果出力クラス */
     private List<BookExporter> bookExporters = new ArrayList<BookExporter>();
@@ -218,7 +223,7 @@ public class BookController {
             }
 
             // シート処理前イベントの通知
-            for ( SheetListenerInfo listenerInfo : sheetListeners) {
+            for ( SheetListenerInfo<PreSheetParseListener> listenerInfo : preParseListeners) {
                 String targetSheetName = listenerInfo.getSheetName();
                 if ( targetSheetName == null || targetSheetName.equals( sheetName)) {
                     listenerInfo.getListener().preParse( sheet, sheetParser);
@@ -229,7 +234,7 @@ public class BookController {
             sheetData = sheetParser.parseSheet( sheet, data);
 
             // シート処理後イベントの通知
-            for ( SheetListenerInfo listnerInfo : sheetListeners) {
+            for ( SheetListenerInfo<PostSheetParseListener> listnerInfo : postParseListeners) {
                 String targetSheetName = listnerInfo.getSheetName();
                 if ( targetSheetName == null || targetSheetName.equals( sheetName)) {
                     listnerInfo.getListener().postParse( sheet, sheetParser, sheetData);
@@ -319,7 +324,8 @@ public class BookController {
      * @param listener 追加するリスナ
      */
     public void addSheetParseListener( SheetParseListener listener) {
-        sheetListeners.add( new SheetListenerInfo( listener));
+        addPreSheetParseListener( listener);
+        addPostSheetParseListener( listener);
     }
 
     /**
@@ -329,14 +335,76 @@ public class BookController {
      * @param listener 追加するリスナ
      */
     public void addSheetParseListener( String sheetName, SheetParseListener listener) {
-        sheetListeners.add( new SheetListenerInfo( sheetName, listener));
+        addPreSheetParseListener( sheetName, listener);
+        addPostSheetParseListener( sheetName, listener);
     }
 
     /**
      * 全てのシート処理リスナを削除する
      */
     public void clearSheetParseListeners() {
-        sheetListeners.clear();
+        clearPreSheetParseListeners();
+        clearPostSheetParseListeners();
+    }
+
+    /**
+     * シート処理前イベントリスナの追加
+     * 
+     * @param listener 追加するリスナ
+     * @since 2.1
+     */
+    public void addPreSheetParseListener( PreSheetParseListener listener) {
+        preParseListeners.add( new SheetListenerInfo<>( listener));
+    }
+
+    /**
+     * シート処理前イベントリスナの追加
+     * 
+     * @param sheetName 対象シート名
+     * @param listener 追加するリスナ
+     * @since 2.1
+     */
+    public void addPreSheetParseListener( String sheetName, PreSheetParseListener listener) {
+        preParseListeners.add( new SheetListenerInfo<>( sheetName, listener));
+    }
+
+    /**
+     * 全てのシート処理前イベントリスナを削除する
+     * 
+     * @since 2.1
+     */
+    public void clearPreSheetParseListeners() {
+        preParseListeners.clear();
+    }
+
+    /**
+     * シート処理後イベントリスナの追加
+     * 
+     * @param listener 追加するリスナ
+     * @since 2.1
+     */
+    public void addPostSheetParseListener( PostSheetParseListener listener) {
+        postParseListeners.add( new SheetListenerInfo<>( listener));
+    }
+
+    /**
+     * シート処理後イベントリスナの追加
+     * 
+     * @param sheetName 対象シート名
+     * @param listener 追加するリスナ
+     * @since 2.1
+     */
+    public void addPostSheetParseListener( String sheetName, PostSheetParseListener listener) {
+        postParseListeners.add( new SheetListenerInfo<>( sheetName, listener));
+    }
+
+    /**
+     * 全てのシート処理後イベントリスナを削除する
+     * 
+     * @since 2.1
+     */
+    public void clearPostSheetParseListeners() {
+        postParseListeners.clear();
     }
 
     /**
@@ -455,13 +523,13 @@ public class BookController {
      * 
      * @since 1.0
      */
-    private class SheetListenerInfo {
+    private class SheetListenerInfo<T> {
 
         /** シート名 */
         private String sheetName = null;
 
         /** リスナ */
-        private SheetParseListener listener = null;
+        private T listener = null;
 
         /**
          * コンストラクタ
@@ -469,7 +537,7 @@ public class BookController {
          * @param sheetName シート名
          * @param listener リスナ
          */
-        public SheetListenerInfo( String sheetName, SheetParseListener listener) {
+        public SheetListenerInfo( String sheetName, T listener) {
             this.sheetName = sheetName;
             this.listener = listener;
         }
@@ -479,7 +547,7 @@ public class BookController {
          * 
          * @param listener リスナ
          */
-        public SheetListenerInfo( SheetParseListener listener) {
+        public SheetListenerInfo( T listener) {
             this.listener = listener;
         }
 
@@ -487,7 +555,7 @@ public class BookController {
             return sheetName;
         }
 
-        public SheetParseListener getListener() {
+        public T getListener() {
             return listener;
         }
     }
