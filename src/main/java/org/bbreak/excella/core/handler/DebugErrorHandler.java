@@ -28,10 +28,10 @@ import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -84,13 +84,14 @@ public class DebugErrorHandler implements ParseErrorHandler {
         workbook.setActiveSheet( workbook.getSheetIndex( errorCell.getSheet()));
         errorCell.setAsActiveCell();
 
+        // エラーセルに背景色を設定
+        CellStyle errorCellStyle = workbook.createCellStyle();
+        errorCellStyle.setFillForegroundColor( IndexedColors.ROSE.getIndex());
+        errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
+        errorCell.setCellStyle( errorCellStyle);
+
         if ( workbook instanceof XSSFWorkbook) {
             XSSFWorkbook xssfWorkbook = ( XSSFWorkbook) workbook;
-
-            CellStyle errorCellStyle = xssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
-            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
-            errorCell.setCellStyle( errorCellStyle);
 
             // TODO:コメントをつけたいけど、うまくいかない。。。
             // XSSFComment xssfComment = ((XSSFSheet)sheet).createComment();
@@ -104,12 +105,6 @@ public class DebugErrorHandler implements ParseErrorHandler {
             for ( int cnt = 0; cnt < sheetNum; cnt++) {
                 hssfWorkbook.getSheetAt( cnt).setSelected( false);
             }
-
-            // エラーセルに背景色を設定
-            CellStyle errorCellStyle = hssfWorkbook.createCellStyle();
-            errorCellStyle.setFillForegroundColor( HSSFColorPredefined.ROSE.getIndex());
-            errorCellStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND);
-            errorCell.setCellStyle( errorCellStyle);
 
             // エラーセルにコメントを追加
             short commentColFrom = ( short) (errorCell.getColumnIndex() + 1);
@@ -135,9 +130,9 @@ public class DebugErrorHandler implements ParseErrorHandler {
      */
     protected String createCommentMessage( ParseException exception) {
         StringBuilder commentMessageBuf = new StringBuilder();
-        
-        if( exception.getMessage() != null){
-            commentMessageBuf.append( exception.getMessage());            
+
+        if ( exception.getMessage() != null) {
+            commentMessageBuf.append( exception.getMessage());
         }
         if ( exception.getCause() != null) {
             commentMessageBuf.append( "\n");
