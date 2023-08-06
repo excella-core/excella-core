@@ -120,9 +120,9 @@ public class DebugErrorHandler implements ParseErrorHandler {
      */
     protected String createCommentMessage( ParseException exception) {
         StringBuilder commentMessageBuf = new StringBuilder();
-        
-        if( exception.getMessage() != null){
-            commentMessageBuf.append( exception.getMessage());            
+
+        if ( exception.getMessage() != null) {
+            commentMessageBuf.append( exception.getMessage());
         }
         if ( exception.getCause() != null) {
             commentMessageBuf.append( "\n");
