@@ -37,13 +37,14 @@ mavenの依存ライブラリとして追加する場合、pom.xmlに下記の�
     <repository>
 	  <id>excella.bbreak.org</id>
       <name>bBreak Systems Excella</name>
-      <url>http://excella-core.github.io/maven2/</url>    
+      <url>https://excella-core.github.io/maven2/</url>    
     </repository>
   </repositories>
 ```
 
 5. 更新履歴  
 -------------
+* 2023/09/28 Version 2.1 リリース
 * 2019/12/24 Version 2.0 リリース
 * 2019/08/15 Version 1.13 リリース
 * 2017/07/15 Version 1.12 リリース
