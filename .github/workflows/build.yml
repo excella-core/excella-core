@@ -19,6 +19,8 @@ jobs:
           - 8
           - 11
           - 17
+          - 21
+          - 25
 
     steps:
       - name: Set locale
