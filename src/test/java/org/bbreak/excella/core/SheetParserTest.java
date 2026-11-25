@@ -341,11 +341,8 @@ public class SheetParserTest {
         }
 
         @Override
-        public boolean isEscaped( Sheet sheet, Cell tagCell) throws ParseException {
-            if ( tagCell != null && tagCell.getCellType() == CellType.STRING) {
-                throw new ParseException( tagCell);
-            }
-            return false;
+        public void unescape( Sheet sheet, Cell tagCell) throws ParseException {
+            throw new ParseException( tagCell);
         }
 
         @Override

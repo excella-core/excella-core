@@ -30,7 +30,8 @@ import org.bbreak.excella.core.tag.TagParser;
  * タグ定義操作ユーティリティ
  *
  * タグ名の先頭にあるバックスラッシュはエスケープ文字として予約されており、タグ名には使用できません。
- * tagParamPrefixを受け取るメソッドではnullを指定できません。空文字の場合はタグに一致しません。
+ * エスケープ系ヘルパー（<code>isEscapedTag</code>、<code>escapeTag</code>、<code>unescapeTag</code>）では、
+ * tagParamPrefixにnullを指定できません。空文字の場合はタグに一致しません。
  *
  * @since 1.0
  */
