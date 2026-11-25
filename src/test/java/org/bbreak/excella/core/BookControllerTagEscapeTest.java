@@ -54,6 +54,7 @@ public class BookControllerTagEscapeTest {
             controller.addSheetExporter( new SheetExporter() {
                 @Override
                 public void setup() {
+                    // This exporter does not require setup.
                 }
 
                 @Override
@@ -63,6 +64,7 @@ public class BookControllerTagEscapeTest {
 
                 @Override
                 public void tearDown() {
+                    // This exporter does not require teardown.
                 }
             });
 

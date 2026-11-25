@@ -148,12 +148,16 @@ public class SheetParser {
                 if ( cell == null) {
                     continue;
                 }
-                for ( TagParser<?> parser : tagParsers) {
-                    if ( parser.isEscaped( sheet, cell)) {
-                        parser.unescape( sheet, cell);
-                        break;
-                    }
-                }
+                unescapeCell( sheet, cell);
+            }
+        }
+    }
+
+    private void unescapeCell( Sheet sheet, Cell cell) throws ParseException {
+        for ( TagParser<?> parser : tagParsers) {
+            if ( parser.isEscaped( sheet, cell)) {
+                parser.unescape( sheet, cell);
+                break;
             }
         }
     }
