@@ -556,16 +556,11 @@ public class ObjectsParserTest extends WorkbookTest {
     @Test
     public void testObjectsParserWithJavaTimeProperties() throws ParseException {
         Workbook workbook = getWorkbook();
-        Sheet sheet = workbook.createSheet( "java-time");
-        Cell tagCell = sheet.createRow( 0).createCell( 0);
-        tagCell.setCellValue( "@Objects{Class=" + TargetEntity.class.getName() + "}");
-        sheet.createRow( 1).createCell( 0).setCellValue( "localDate");
-        sheet.getRow( 1).createCell( 1).setCellValue( "localDateTime");
+        Sheet sheet = workbook.getSheet( "java-time");
+        Cell tagCell = sheet.getRow( 0).getCell( 0);
 
         LocalDate expectedLocalDate = LocalDate.of( 2020, 1, 2);
         LocalDateTime expectedLocalDateTime = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
-        sheet.createRow( 2).createCell( 0).setCellValue( expectedLocalDate);
-        sheet.getRow( 2).createCell( 1).setCellValue( expectedLocalDateTime);
 
         List<Object> results = new ObjectsParser( "@Objects").parse( sheet, tagCell, null);
 
