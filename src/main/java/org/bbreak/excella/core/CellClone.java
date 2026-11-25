@@ -71,6 +71,8 @@ public class CellClone implements Cell {
 	private String cellFormula;
 	
 	private Date dateCellValue;
+
+	private LocalDateTime localDateTimeCellValue;
 	
 	private byte errorCellValue;
 	
@@ -100,13 +102,28 @@ public class CellClone implements Cell {
             case NUMERIC:
                 this.numericCellValue = cell.getNumericCellValue();
                 this.dateCellValue = cell.getDateCellValue();
+                this.localDateTimeCellValue = cell.getLocalDateTimeCellValue();
                 break;
             case FORMULA:
-                this.numericCellValue = cell.getNumericCellValue();
-                this.dateCellValue = cell.getDateCellValue();
-                this.richStringCellValue = cell.getRichStringCellValue();
-                this.booleanCellValue = cell.getBooleanCellValue();
                 this.cellFormula = cell.getCellFormula();
+                switch ( cell.getCachedFormulaResultType()) {
+                    case NUMERIC:
+                        this.numericCellValue = cell.getNumericCellValue();
+                        this.dateCellValue = cell.getDateCellValue();
+                        this.localDateTimeCellValue = cell.getLocalDateTimeCellValue();
+                        break;
+                    case STRING:
+                        this.richStringCellValue = cell.getRichStringCellValue();
+                        break;
+                    case BOOLEAN:
+                        this.booleanCellValue = cell.getBooleanCellValue();
+                        break;
+                    case ERROR:
+                        this.errorCellValue = cell.getErrorCellValue();
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case BOOLEAN:
                 this.booleanCellValue = cell.getBooleanCellValue();
@@ -114,6 +131,7 @@ public class CellClone implements Cell {
             case BLANK:
                 this.numericCellValue = cell.getNumericCellValue();
                 this.dateCellValue = cell.getDateCellValue();
+                this.localDateTimeCellValue = cell.getLocalDateTimeCellValue();
                 this.richStringCellValue = cell.getRichStringCellValue();
                 this.booleanCellValue = cell.getBooleanCellValue();
                 break;
@@ -291,7 +309,7 @@ public class CellClone implements Cell {
 
     @Override
     public LocalDateTime getLocalDateTimeCellValue() {
-        throw new IllegalStateException("CellClone is not support getLocalDateTimeCellValue().");
+        return localDateTimeCellValue;
     }
 
     @Override

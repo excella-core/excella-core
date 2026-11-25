@@ -25,6 +25,8 @@ import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -549,6 +551,23 @@ public class ObjectsParserTest extends WorkbookTest {
             assertEquals( 16, cell.getColumnIndex());
             System.out.println( "No.36:" + pe);
         }
+    }
+
+    @Test
+    public void testObjectsParserWithJavaTimeProperties() throws ParseException {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.getSheet( "java-time");
+        Cell tagCell = sheet.getRow( 0).getCell( 0);
+
+        LocalDate expectedLocalDate = LocalDate.of( 2020, 1, 2);
+        LocalDateTime expectedLocalDateTime = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
+
+        List<Object> results = new ObjectsParser( "@Objects").parse( sheet, tagCell, null);
+
+        assertEquals( 1, results.size());
+        TargetEntity targetEntity = ( TargetEntity) results.get( 0);
+        assertEquals( expectedLocalDate, targetEntity.getLocalDate());
+        assertEquals( expectedLocalDateTime, targetEntity.getLocalDateTime());
     }
 
 }

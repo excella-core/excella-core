@@ -23,6 +23,8 @@ package org.bbreak.excella.core.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -259,6 +261,11 @@ public final class PoiUtil {
                 } else {
                     return number;
                 }
+            } else if ( LocalDateTime.class.isAssignableFrom( propertyClass)) {
+                return cell.getLocalDateTimeCellValue();
+            } else if ( LocalDate.class.isAssignableFrom( propertyClass)) {
+                LocalDateTime localDateTime = cell.getLocalDateTimeCellValue();
+                return localDateTime != null ? localDateTime.toLocalDate() : null;
             } else if ( Date.class.isAssignableFrom( propertyClass)) {
                 // 日付
                 return cell.getDateCellValue();
@@ -927,6 +934,10 @@ public final class PoiUtil {
                     numValue = new Double( String.valueOf( floatValue));
                 }
                 cell.setCellValue( numValue.doubleValue());
+            } else if ( value instanceof LocalDateTime) {
+                cell.setCellValue( ( LocalDateTime) value);
+            } else if ( value instanceof LocalDate) {
+                cell.setCellValue( ( LocalDate) value);
             } else if ( value instanceof Date) {
                 Date dateValue = ( Date) value;
                 cell.setCellValue( dateValue);
