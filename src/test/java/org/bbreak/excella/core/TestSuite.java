@@ -32,7 +32,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     BookControllerTest.class,
+    BookControllerTagEscapeTest.class,
     BookDataTest.class,
+    SheetParserTest.class,
     SheetDataTest.class
 })
 public class TestSuite {

@@ -42,7 +42,9 @@ import org.bbreak.excella.core.tag.TagParser;
 
 /**
  * ワークブックの解析を行うクラス
- * 
+ *
+ * PostSheetParseListenerにはエスケープ状態のシートを渡し、その後にエスケープを解除してからSheetExporterへ渡す。
+ *
  * @since 1.0
  */
 public class BookController {
@@ -197,6 +199,8 @@ public class BookController {
     /**
      * シートデータの解析
      * 
+     * PostSheetParseListenerの実行後、SheetExporterの実行前にエスケープされたタグを解除する。
+     *
      * @param sheetName 解析対象のシート名
      * @param data BookControllerのparseBook(), parseSheet()メソッド、 SheetParserのparseSheetメソッドで引数を渡した場合に TagParserまで引き継がれる処理データ
      * @return シートの解析結果
@@ -231,7 +235,8 @@ public class BookController {
             }
 
             // シート解析処理
-            sheetData = sheetParser.parseSheet( sheet, data);
+            SheetParser.ParseResult parseResult = sheetParser.parseSheetWithoutUnescape( sheet, data);
+            sheetData = parseResult.getSheetData();
 
             // シート処理後イベントの通知
             for ( SheetListenerInfo<PostSheetParseListener> listnerInfo : postParseListeners) {
@@ -240,6 +245,9 @@ public class BookController {
                     listnerInfo.getListener().postParse( sheet, sheetParser, sheetData);
                 }
             }
+
+            // シート解析後のエスケープ解除
+            sheetParser.unescapeSheet( sheet, parseResult);
         } catch ( ParseException ex) {
             if ( log.isWarnEnabled()) {
                 log.warn( sheetName + "処理中に例外が発生しました", ex);

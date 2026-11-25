@@ -46,7 +46,8 @@ import org.bbreak.excella.core.util.TagUtil;
  * タグの検査は行列方向([1,A] [1,B]・・・、[2,A] [2,B]・・・)で行う
  * 
  * タグにLastTag=Trueのパラメータが設定されていた場合はそのタグを処理して終了する。
- * 
+ * 解析後、LastTagの終了位置まで（指定がなければシート全体）のエスケープされたタグを解除する。
+ *
  * @since 1.0
  */
 public class SheetParser {
@@ -74,6 +75,20 @@ public class SheetParser {
      * @throws ParseException 解析に失敗した場合にThrowされる
      */
     public SheetData parseSheet( Sheet sheet, Object data) throws ParseException {
+        ParseResult parseResult = parseSheetWithoutUnescape( sheet, data);
+        unescapeSheet( sheet, parseResult);
+        return parseResult.getSheetData();
+    }
+
+    /**
+     * シートの解析を行い、エスケープを解除せずに解析結果を返す
+     *
+     * @param sheet 解析対象シート
+     * @param data TagParserまで引き継がれる処理データ
+     * @return 解析結果とLastTagによる停止位置
+     * @throws ParseException 解析に失敗した場合
+     */
+    ParseResult parseSheetWithoutUnescape( Sheet sheet, Object data) throws ParseException {
         // 解析結果
         String sheetName = PoiUtil.getSheetName( sheet);
         SheetData sheetData = new SheetData( sheetName);
@@ -96,13 +111,50 @@ public class SheetParser {
                     }
                     if( parseCell(sheet, data, sheetData, cell, row, columnIdx)) {
                     	// 終了タグによる終了
-                    	return sheetData;
+                        return new ParseResult( sheetData, true, rowCnt, columnIdx);
                     }
                 }
             }
         }
 
-        return sheetData;
+        return new ParseResult( sheetData, false, -1, -1);
+    }
+
+    /**
+     * 解析後のシートにあるエスケープされたタグを解除する
+     *
+     * @param sheet 対象シート
+     * @param parseResult 解析結果とLastTagによる停止位置
+     * @throws ParseException 解除に失敗した場合
+     */
+    void unescapeSheet( Sheet sheet, ParseResult parseResult) throws ParseException {
+        int lastRowIndex = parseResult.stoppedByLastTag
+                ? parseResult.lastRowIndex
+                : sheet.getLastRowNum();
+
+        for ( int rowIndex = sheet.getFirstRowNum(); rowIndex <= lastRowIndex; rowIndex++) {
+            Row row = sheet.getRow( rowIndex);
+            if ( row == null) {
+                continue;
+            }
+
+            int columnLimit = row.getLastCellNum();
+            if ( parseResult.stoppedByLastTag && rowIndex == lastRowIndex) {
+                columnLimit = Math.min( columnLimit, parseResult.lastColumnIndex + 1);
+            }
+            for ( int columnIndex = 0; columnIndex < columnLimit; columnIndex++) {
+                Cell cell = row.getCell( columnIndex);
+                if ( cell == null) {
+                    continue;
+                }
+                for ( TagParser<?> parser : tagParsers) {
+                    if ( parser.isEscaped( sheet, cell)) {
+                        parser.unescape( sheet, cell);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -197,5 +249,27 @@ public class SheetParser {
      */
     public List<TagParser<?>> getTagParsers() {
         return tagParsers;
+    }
+
+    static final class ParseResult {
+
+        private final SheetData sheetData;
+
+        private final boolean stoppedByLastTag;
+
+        private final int lastRowIndex;
+
+        private final int lastColumnIndex;
+
+        private ParseResult( SheetData sheetData, boolean stoppedByLastTag, int lastRowIndex, int lastColumnIndex) {
+            this.sheetData = sheetData;
+            this.stoppedByLastTag = stoppedByLastTag;
+            this.lastRowIndex = lastRowIndex;
+            this.lastColumnIndex = lastColumnIndex;
+        }
+
+        SheetData getSheetData() {
+            return sheetData;
+        }
     }
 }

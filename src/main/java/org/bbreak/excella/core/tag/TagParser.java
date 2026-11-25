@@ -28,13 +28,22 @@ import org.bbreak.excella.core.util.TagUtil;
 
 /**
  * タグ処理のスーパークラス
- * 
+ *
+ * タグ直前の先頭にあるバックスラッシュでタグをエスケープできます。
+ * エスケープされたタグはパース対象にならず、シート解析後に先頭の1個だけが除去されます。
+ * インライン型タグでは、必要に応じてエスケープ判定・解除メソッドをオーバーライドしてください。
+ *
  * @since 1.0
  *
  * @param <RESULT> 処理結果の型
  */
 public abstract class TagParser<RESULT> {
 	
+    /**
+     * タグエスケープ文字
+     */
+    public static final String TAG_ESCAPE = "\\";
+
 	/**
      * パラメータ定義の開始文字
      */
@@ -86,6 +95,53 @@ public abstract class TagParser<RESULT> {
             }
         }
         return false;
+    }
+
+    /**
+     * セルのタグがエスケープされているかどうかを判定する
+     *
+     * @param sheet 対象シート
+     * @param tagCell 対象セル
+     * @return タグがエスケープされている場合はTrue
+     * @throws ParseException
+     */
+    public boolean isEscaped( Sheet sheet, Cell tagCell) throws ParseException {
+        return tagCell != null
+                && tagCell.getCellType() == CellType.STRING
+                && TagUtil.isEscapedTag( tagCell.getStringCellValue(), getTag());
+    }
+
+    /**
+     * タグ定義をエスケープする
+     *
+     * @param value タグ定義
+     * @return エスケープ後のタグ定義
+     */
+    public String escape( String value) {
+        return TagUtil.escapeTag( value, getTag());
+    }
+
+    /**
+     * タグ定義のエスケープを解除する
+     *
+     * @param value タグ定義
+     * @return エスケープ解除後のタグ定義
+     */
+    public String unescape( String value) {
+        return TagUtil.unescapeTag( value, getTag());
+    }
+
+    /**
+     * セルのタグがエスケープされている場合、先頭のエスケープ文字を1個だけ除去する
+     *
+     * @param sheet 対象シート
+     * @param tagCell 対象セル
+     * @throws ParseException
+     */
+    public void unescape( Sheet sheet, Cell tagCell) throws ParseException {
+        if ( isEscaped( sheet, tagCell)) {
+            tagCell.setCellValue( unescape( tagCell.getStringCellValue()));
+        }
     }
 
     /**
