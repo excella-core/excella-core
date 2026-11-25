@@ -2,7 +2,7 @@
  * #%L
  * excella-core
  * %%
- * Copyright (C) 2009 - 2019 bBreak Systems and contributors
+ * Copyright (C) 2009 - 2026 bBreak Systems and contributors
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
