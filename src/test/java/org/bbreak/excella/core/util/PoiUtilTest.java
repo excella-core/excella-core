@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
@@ -850,5 +852,122 @@ public class PoiUtilTest extends WorkbookTest {
         // No.30 通常のシート
         int lastColNum2 = PoiUtil.getLastColNum( sheet_7);
         assertEquals( 10, lastColNum2);
+    }
+
+    @Test
+    public void testSetCellValueLocalDate() {
+        Workbook workbook = getWorkbook();
+        Cell cell = workbook.createSheet( "java-time").createRow( 0).createCell( 0);
+        LocalDate expected = LocalDate.of( 2020, 1, 2);
+
+        PoiUtil.setCellValue( cell, expected);
+
+        assertEquals( expected, cell.getLocalDateTimeCellValue().toLocalDate());
+    }
+
+    @Test
+    public void testSetCellValueLocalDateTime() {
+        Workbook workbook = getWorkbook();
+        Cell cell = workbook.createSheet( "java-time").createRow( 0).createCell( 0);
+        LocalDateTime expected = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
+
+        PoiUtil.setCellValue( cell, expected);
+
+        assertEquals( expected, cell.getLocalDateTimeCellValue());
+    }
+
+    @Test
+    public void testGetCellValueLocalDateTime() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.createSheet( "java-time");
+        LocalDateTime expected = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
+        Cell numericCell = sheet.createRow( 0).createCell( 0);
+        numericCell.setCellValue( expected);
+        Cell formulaCell = sheet.getRow( 0).createCell( 1);
+        formulaCell.setCellFormula( "A1");
+        workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
+        Cell blankCell = sheet.createRow( 1).createCell( 0);
+        Cell emptyStringCell = sheet.createRow( 2).createCell( 0);
+        emptyStringCell.setCellValue( "");
+
+        assertEquals( expected, PoiUtil.getCellValue( numericCell, LocalDateTime.class));
+        assertEquals( expected, PoiUtil.getCellValue( formulaCell, LocalDateTime.class));
+        assertNull( PoiUtil.getCellValue( blankCell, LocalDateTime.class));
+        assertNull( PoiUtil.getCellValue( emptyStringCell, LocalDateTime.class));
+    }
+
+    @Test
+    public void testGetCellValueLocalDate() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.createSheet( "java-time");
+        LocalDate expected = LocalDate.of( 2020, 1, 2);
+        Cell numericCell = sheet.createRow( 0).createCell( 0);
+        numericCell.setCellValue( expected);
+        Cell formulaCell = sheet.getRow( 0).createCell( 1);
+        formulaCell.setCellFormula( "A1");
+        workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
+        Cell blankCell = sheet.createRow( 1).createCell( 0);
+        Cell emptyStringCell = sheet.createRow( 2).createCell( 0);
+        emptyStringCell.setCellValue( "");
+
+        assertEquals( expected, PoiUtil.getCellValue( numericCell, LocalDate.class));
+        assertEquals( expected, PoiUtil.getCellValue( formulaCell, LocalDate.class));
+        assertNull( PoiUtil.getCellValue( blankCell, LocalDate.class));
+        assertNull( PoiUtil.getCellValue( emptyStringCell, LocalDate.class));
+    }
+
+    @Test
+    public void testCellCloneGetLocalDateTimeCellValueForNumericCell() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.createSheet( "java-time");
+        LocalDateTime expected = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
+        Cell numericCell = sheet.createRow( 0).createCell( 0);
+        numericCell.setCellValue( expected);
+
+        CellClone numericClone = new CellClone( numericCell);
+
+        assertEquals( expected, numericClone.getLocalDateTimeCellValue());
+    }
+
+    @Test
+    public void testCellCloneGetLocalDateTimeCellValueForFormulaCell() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.createSheet( "java-time");
+        LocalDateTime expected = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
+        Cell numericCell = sheet.createRow( 0).createCell( 0);
+        numericCell.setCellValue( expected);
+        Cell formulaCell = sheet.createRow( 1).createCell( 0);
+        formulaCell.setCellFormula( "A1");
+        workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
+
+        CellClone formulaClone = new CellClone( formulaCell);
+
+        assertEquals( expected, formulaClone.getLocalDateTimeCellValue());
+    }
+
+    @Test
+    public void testCellCloneGetLocalDateTimeCellValueForNonNumericCells() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.createSheet( "java-time");
+        Cell blankCell = sheet.createRow( 0).createCell( 0);
+        Cell stringCell = sheet.createRow( 1).createCell( 0);
+        stringCell.setCellValue( "not a date");
+
+        CellClone blankClone = new CellClone( blankCell);
+        CellClone stringClone = new CellClone( stringCell);
+
+        assertNull( blankClone.getLocalDateTimeCellValue());
+        assertEquals( blankCell.getDateCellValue(), blankClone.getDateCellValue());
+        assertEquals( blankCell.getLocalDateTimeCellValue(), blankClone.getLocalDateTimeCellValue());
+        assertNull( stringClone.getDateCellValue());
+        assertNull( stringClone.getLocalDateTimeCellValue());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testCellCloneSetCellValueLocalDateTimeIsUnsupported() {
+        Workbook workbook = getWorkbook();
+        Cell cell = workbook.createSheet( "java-time").createRow( 0).createCell( 0);
+
+        new CellClone( cell).setCellValue( LocalDateTime.of( 2020, 1, 2, 3, 4, 5));
     }
 }

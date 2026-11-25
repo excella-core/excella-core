@@ -21,6 +21,8 @@
 package org.bbreak.excella.core.tag.excel2java.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -99,6 +101,16 @@ public class TargetEntity {
      * Date型
      */
     private Date date;
+
+    /**
+     * LocalDate型
+     */
+    private LocalDate localDate;
+
+    /**
+     * LocalDateTime型
+     */
+    private LocalDateTime localDateTime;
 
     /**
      * String型
@@ -220,6 +232,22 @@ public class TargetEntity {
 
     public void setDate( Date date) {
         this.date = date;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate( LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime( LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
     public String getString() {
