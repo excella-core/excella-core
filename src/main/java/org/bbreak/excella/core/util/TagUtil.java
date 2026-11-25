@@ -28,7 +28,10 @@ import org.bbreak.excella.core.tag.TagParser;
 
 /**
  * タグ定義操作ユーティリティ
- * 
+ *
+ * タグ名の先頭にあるバックスラッシュはエスケープ文字として予約されており、タグ名には使用できません。
+ * tagParamPrefixを受け取るメソッドではnullを指定できません。空文字の場合はタグに一致しません。
+ *
  * @since 1.0
  */
 public class TagUtil {
@@ -141,7 +144,7 @@ public class TagUtil {
      * タグ定義がエスケープされているかどうかを判定する
      *
      * @param tagDef タグ定義
-     * @param tag 対象タグ
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
      * @return タグ定義がエスケープされている場合はTrue
      */
     public static boolean isEscapedTag( String tagDef, String tag) {
@@ -152,12 +155,12 @@ public class TagUtil {
      * タグ定義がエスケープされているかどうかを判定する
      *
      * @param tagDef タグ定義
-     * @param tag 対象タグ
-     * @param tagParamPrefix タグのパラメータ開始文字
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
      * @return タグ定義がエスケープされている場合はTrue
      */
     public static boolean isEscapedTag( String tagDef, String tag, String tagParamPrefix) {
-        if ( tagDef == null || tag == null || tag.isEmpty()) {
+        if ( tagDef == null || tag == null || tag.isEmpty() || !tagDef.startsWith( TagParser.TAG_ESCAPE)) {
             return false;
         }
 
@@ -170,7 +173,7 @@ public class TagUtil {
      * タグ定義をエスケープする
      *
      * @param value タグ定義
-     * @param tag 対象タグ
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
      * @return エスケープ後のタグ定義
      */
     public static String escapeTag( String value, String tag) {
@@ -181,8 +184,8 @@ public class TagUtil {
      * タグ定義をエスケープする
      *
      * @param value タグ定義
-     * @param tag 対象タグ
-     * @param tagParamPrefix タグのパラメータ開始文字
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
      * @return エスケープ後のタグ定義
      */
     public static String escapeTag( String value, String tag, String tagParamPrefix) {
@@ -202,7 +205,7 @@ public class TagUtil {
      * タグ定義のエスケープを解除する
      *
      * @param value タグ定義
-     * @param tag 対象タグ
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
      * @return エスケープ解除後のタグ定義
      */
     public static String unescapeTag( String value, String tag) {
@@ -213,8 +216,8 @@ public class TagUtil {
      * タグ定義のエスケープを解除する
      *
      * @param value タグ定義
-     * @param tag 対象タグ
-     * @param tagParamPrefix タグのパラメータ開始文字
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
      * @return エスケープ解除後のタグ定義
      */
     public static String unescapeTag( String value, String tag, String tagParamPrefix) {

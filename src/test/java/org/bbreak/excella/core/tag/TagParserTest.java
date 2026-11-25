@@ -74,7 +74,8 @@ public class TagParserTest {
             Cell numericCell = row.createCell( 0);
             numericCell.setCellValue( 100);
             Cell formulaCell = row.createCell( 1);
-            formulaCell.setCellFormula( "1+1");
+            formulaCell.setCellFormula( "\"\\@Map{}\"");
+            workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
             Cell blankCell = row.createCell( 2, CellType.BLANK);
 
             assertFalse( parser.isEscaped( sheet, numericCell));
@@ -87,7 +88,26 @@ public class TagParserTest {
             parser.unescape( sheet, null);
             assertEquals( CellType.NUMERIC, numericCell.getCellType());
             assertEquals( CellType.FORMULA, formulaCell.getCellType());
+            assertEquals( CellType.STRING, formulaCell.getCachedFormulaResultType());
+            assertEquals( "\\@Map{}", formulaCell.getStringCellValue());
             assertEquals( CellType.BLANK, blankCell.getCellType());
+        }
+    }
+
+    @Test(expected = ParseException.class)
+    public void testUnescapeCellPropagatesParseException() throws Exception {
+        try ( Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet();
+            Cell cell = sheet.createRow( 0).createCell( 0);
+            cell.setCellValue( "\\@Map{}");
+            TestParser parser = new TestParser( "@Map") {
+                @Override
+                public boolean isEscaped( Sheet targetSheet, Cell tagCell) throws ParseException {
+                    throw new ParseException( tagCell);
+                }
+            };
+
+            parser.unescape( sheet, cell);
         }
     }
 

@@ -21,6 +21,7 @@
 package org.bbreak.excella.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -30,6 +31,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bbreak.excella.core.exception.ParseException;
 import org.bbreak.excella.core.tag.TagParser;
+import org.bbreak.excella.core.util.TagUtil;
 import org.junit.Test;
 
 public class SheetParserTest {
@@ -69,7 +71,8 @@ public class SheetParserTest {
             Cell numericCell = row.createCell( 4);
             numericCell.setCellValue( 100);
             Cell formulaCell = row.createCell( 5);
-            formulaCell.setCellFormula( "1+1");
+            formulaCell.setCellFormula( "\"\\@Map{}\"");
+            workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
             Cell blankCell = row.createCell( 6, CellType.BLANK);
             SheetParser sheetParser = new SheetParser();
             sheetParser.addTagParser( new RecordingParser( "@Map"));
@@ -81,7 +84,38 @@ public class SheetParserTest {
             }
             assertEquals( CellType.NUMERIC, numericCell.getCellType());
             assertEquals( CellType.FORMULA, formulaCell.getCellType());
+            assertEquals( CellType.STRING, formulaCell.getCachedFormulaResultType());
+            assertEquals( "\\@Map{}", formulaCell.getStringCellValue());
             assertEquals( CellType.BLANK, blankCell.getCellType());
+        }
+    }
+
+    @Test
+    public void testEscapedSuffixTagIsSkippedOnInitialAndRecursiveParsing() throws Exception {
+        try ( Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet();
+            Row row = sheet.createRow( 0);
+            Cell initiallyEscapedCell = row.createCell( 0);
+            initiallyEscapedCell.setCellValue( "\\${initial}");
+            Cell recursivelyEscapedCell = row.createCell( 1);
+            recursivelyEscapedCell.setCellValue( "\\${recursive}");
+            EndsWithDollarParser suffixParser = new EndsWithDollarParser();
+            assertTrue( suffixParser.isEscaped( sheet, initiallyEscapedCell));
+            assertTrue( suffixParser.isParse( sheet, initiallyEscapedCell));
+            assertTrue( suffixParser.isEscaped( sheet, recursivelyEscapedCell));
+            assertTrue( suffixParser.isParse( sheet, recursivelyEscapedCell));
+            recursivelyEscapedCell.setCellValue( "@Replace{}");
+            RecordingParser replacementParser = new RecordingParser( "@Replace", "\\${recursive}");
+            SheetParser sheetParser = new SheetParser();
+            sheetParser.addTagParser( replacementParser);
+            sheetParser.addTagParser( suffixParser);
+
+            sheetParser.parseSheet( sheet, null);
+
+            assertEquals( "${initial}", initiallyEscapedCell.getStringCellValue());
+            assertEquals( "${recursive}", recursivelyEscapedCell.getStringCellValue());
+            assertEquals( 1, replacementParser.getParseCount());
+            assertEquals( 0, suffixParser.getParseCount());
         }
     }
 
@@ -170,6 +204,35 @@ public class SheetParserTest {
             secondSheetCell.setCellValue( "\\@Map{}");
             sheetParser.parseSheet( secondSheet, null);
             assertEquals( "@Map{}", secondSheetCell.getStringCellValue());
+        }
+    }
+
+    @Test
+    public void testLastTagFoundDuringRecursiveParseLimitsUnescaping() throws Exception {
+        try ( Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet();
+            Cell replacementCell = sheet.createRow( 0).createCell( 0);
+            replacementCell.setCellValue( "@Replace{}");
+            Cell afterLastTag = sheet.getRow( 0).createCell( 1);
+            afterLastTag.setCellValue( "\\@Map{}");
+            Cell laterRowCell = sheet.createRow( 1).createCell( 0);
+            laterRowCell.setCellValue( "\\@Map{}");
+            RecordingParser replacementParser = new RecordingParser( "@Replace", "@Stop{LastTag=true}");
+            RecordingParser stopParser = new RecordingParser( "@Stop");
+            RecordingParser mapParser = new RecordingParser( "@Map");
+            SheetParser sheetParser = new SheetParser();
+            sheetParser.addTagParser( replacementParser);
+            sheetParser.addTagParser( stopParser);
+            sheetParser.addTagParser( mapParser);
+
+            sheetParser.parseSheet( sheet, null);
+
+            assertEquals( "@Stop{LastTag=true}", replacementCell.getStringCellValue());
+            assertEquals( "\\@Map{}", afterLastTag.getStringCellValue());
+            assertEquals( "\\@Map{}", laterRowCell.getStringCellValue());
+            assertEquals( 1, replacementParser.getParseCount());
+            assertEquals( 1, stopParser.getParseCount());
+            assertEquals( 0, mapParser.getParseCount());
         }
     }
 
@@ -288,6 +351,32 @@ public class SheetParserTest {
         @Override
         public Object parse( Sheet sheet, Cell tagCell, Object data) throws ParseException {
             return null;
+        }
+    }
+
+    private static class EndsWithDollarParser extends TagParser<Object> {
+
+        private int parseCount;
+
+        private EndsWithDollarParser() {
+            super( "$");
+        }
+
+        @Override
+        public boolean isParse( Sheet sheet, Cell tagCell) {
+            return tagCell != null
+                    && tagCell.getCellType() == CellType.STRING
+                    && TagUtil.getTag( tagCell.getStringCellValue()).endsWith( "$");
+        }
+
+        @Override
+        public Object parse( Sheet sheet, Cell tagCell, Object data) {
+            parseCount++;
+            return null;
+        }
+
+        private int getParseCount() {
+            return parseCount;
         }
     }
 }

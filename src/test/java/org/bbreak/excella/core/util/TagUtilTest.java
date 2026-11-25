@@ -152,12 +152,15 @@ public class TagUtilTest {
     @Test
     public void testEscapeTagOperationsWithNullOrEmptyValuesAndTags() {
         assertFalse( TagUtil.isEscapedTag( null, "@Map"));
+        assertFalse( TagUtil.isEscapedTag( "", "@Map"));
         assertFalse( TagUtil.isEscapedTag( "\\@Map", null));
         assertFalse( TagUtil.isEscapedTag( "\\@Map", ""));
         assertEquals( null, TagUtil.escapeTag( null, "@Map"));
+        assertEquals( "", TagUtil.escapeTag( "", "@Map"));
         assertEquals( "\\@Map", TagUtil.escapeTag( "\\@Map", null));
         assertEquals( "\\@Map", TagUtil.escapeTag( "\\@Map", ""));
         assertEquals( null, TagUtil.unescapeTag( null, "@Map"));
+        assertEquals( "", TagUtil.unescapeTag( "", "@Map"));
     }
 
     private String repeatBackslashes( int count) {

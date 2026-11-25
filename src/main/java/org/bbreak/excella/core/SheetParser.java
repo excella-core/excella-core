@@ -47,6 +47,7 @@ import org.bbreak.excella.core.util.TagUtil;
  * 
  * タグにLastTag=Trueのパラメータが設定されていた場合はそのタグを処理して終了する。
  * 解析後、LastTagの終了位置まで（指定がなければシート全体）のエスケープされたタグを解除する。
+ * LastTag=true時の解除終了位置は、パース時点で記録した行・列座標に基づく。
  *
  * @since 1.0
  */
@@ -172,7 +173,7 @@ public class SheetParser {
     private boolean parseCell( Sheet sheet, Object data, SheetData sheetData, Cell cell, Row row, int columnIdx) throws ParseException {
         for ( TagParser<?> parser : tagParsers) {
             // 処理判定チェック
-            if ( parser.isParse( sheet, cell)) {
+            if ( !parser.isEscaped( sheet, cell) && parser.isParse( sheet, cell)) {
                 String strCellValue = cell.getStringCellValue();
                 Map<String, String> paramDef = TagUtil.getParams( strCellValue);
                 // 処理実行
