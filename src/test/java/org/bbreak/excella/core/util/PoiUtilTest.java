@@ -927,11 +927,30 @@ public class PoiUtilTest extends WorkbookTest {
         Sheet sheet = workbook.getSheet( "java-time");
         LocalDateTime expected = LocalDateTime.of( 2020, 1, 2, 3, 4, 5);
         Cell formulaCell = sheet.getRow( 0).getCell( 3);
-        workbook.getCreationHelper().createFormulaEvaluator().evaluateFormulaCell( formulaCell);
 
         CellClone formulaClone = new CellClone( formulaCell);
 
         assertEquals( expected, formulaClone.getLocalDateTimeCellValue());
+    }
+
+    @Test
+    public void testCellCloneGetLocalDateTimeCellValueForNonNumericFormulaCells() {
+        Workbook workbook = getWorkbook();
+        Sheet sheet = workbook.getSheetAt( 0);
+        Cell stringFormulaCell = sheet.getRow( 8).getCell( 0);
+        Cell booleanFormulaCell = sheet.getRow( 9).getCell( 0);
+        Cell errorFormulaCell = sheet.getRow( 10).getCell( 0);
+
+        CellClone stringFormulaClone = new CellClone( stringFormulaCell);
+        CellClone booleanFormulaClone = new CellClone( booleanFormulaCell);
+        CellClone errorFormulaClone = new CellClone( errorFormulaCell);
+
+        assertEquals( "あああ", stringFormulaClone.getStringCellValue());
+        assertNull( stringFormulaClone.getLocalDateTimeCellValue());
+        assertTrue( booleanFormulaClone.getBooleanCellValue());
+        assertNull( booleanFormulaClone.getLocalDateTimeCellValue());
+        assertEquals( errorFormulaCell.getErrorCellValue(), errorFormulaClone.getErrorCellValue());
+        assertNull( errorFormulaClone.getLocalDateTimeCellValue());
     }
 
     @Test
