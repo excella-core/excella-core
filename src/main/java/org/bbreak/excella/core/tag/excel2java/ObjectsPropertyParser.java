@@ -29,7 +29,9 @@ import org.bbreak.excella.core.exception.ParseException;
 
 /**
  * Objectsパーサ用独自プロパティ解析クラス
- * 
+ *
+ * TagParserを継承しないため、タグエスケープ機能の対象外です。
+ *
  * @since 1.0
  */
 public abstract class ObjectsPropertyParser {

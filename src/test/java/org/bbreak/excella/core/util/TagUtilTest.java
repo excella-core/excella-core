@@ -21,6 +21,8 @@
 package org.bbreak.excella.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import java.util.Map;
 
 import org.bbreak.excella.core.tag.TagParser;
@@ -85,5 +87,87 @@ public class TagUtilTest {
         resultMap = TagUtil.getParams( tagDef);
         assertEquals( "DataRowFrom", resultMap.get( ""));
 
+    }
+
+    @Test
+    public void testEscapeTagOperations() {
+        String tag = "@Map";
+        String suffix = "{Key=key,Value=value}";
+
+        for ( int backslashCount = 0; backslashCount <= 4; backslashCount++) {
+            String value = repeatBackslashes( backslashCount) + tag + suffix;
+            assertEquals( backslashCount > 0, TagUtil.isEscapedTag( value, tag));
+            assertEquals( repeatBackslashes( backslashCount + 1) + tag + suffix,
+                    TagUtil.escapeTag( value, tag));
+            assertEquals( repeatBackslashes( Math.max( 0, backslashCount - 1)) + tag + suffix,
+                    TagUtil.unescapeTag( value, tag));
+            assertEquals( value, TagUtil.unescapeTag( TagUtil.escapeTag( value, tag), tag));
+        }
+
+        assertTrue( TagUtil.isEscapedTag( "\\@Map", tag));
+        assertEquals( "@Map", TagUtil.unescapeTag( "\\@Map", tag));
+        assertEquals( "@Map{}", TagUtil.unescapeTag( "\\@Map{}", tag));
+    }
+
+    @Test
+    public void testEscapeTagOperationsWithSpecialTagsAndNewlines() {
+        String[] tags = { "$R[]", "$BR[]" };
+        for ( String tag : tags) {
+            String value = "\\" + tag + "{*}";
+            assertTrue( TagUtil.isEscapedTag( value, tag));
+            assertEquals( "\\" + value, TagUtil.escapeTag( value, tag));
+            assertEquals( tag + "{*}", TagUtil.unescapeTag( value, tag));
+        }
+
+        String newlineValue = "\\@Map{first line\nsecond line}";
+        assertTrue( TagUtil.isEscapedTag( newlineValue, "@Map"));
+        assertEquals( "\\\\@Map{first line\nsecond line}",
+                TagUtil.escapeTag( newlineValue, "@Map"));
+        assertEquals( newlineValue, TagUtil.unescapeTag(
+                TagUtil.escapeTag( newlineValue, "@Map"), "@Map"));
+    }
+
+    @Test
+    public void testEscapeTagOperationsWithCustomParameterPrefix() {
+        String value = "\\@Map[Key=Value]";
+
+        assertTrue( TagUtil.isEscapedTag( value, "@Map", "["));
+        assertEquals( "\\\\@Map[Key=Value]", TagUtil.escapeTag( value, "@Map", "["));
+        assertEquals( value, TagUtil.unescapeTag(
+                TagUtil.escapeTag( value, "@Map", "["), "@Map", "["));
+        assertFalse( TagUtil.isEscapedTag( value, "@Map"));
+    }
+
+    @Test
+    public void testEscapeTagOperationsLeaveUnrelatedValuesUnchanged() {
+        String[] values = { "\\1,000", "C:\\temp\\a.txt", "\\", "\\\\" };
+
+        for ( String value : values) {
+            assertFalse( TagUtil.isEscapedTag( value, "@Map"));
+            assertEquals( value, TagUtil.escapeTag( value, "@Map"));
+            assertEquals( value, TagUtil.unescapeTag( value, "@Map"));
+        }
+    }
+
+    @Test
+    public void testEscapeTagOperationsWithNullOrEmptyValuesAndTags() {
+        assertFalse( TagUtil.isEscapedTag( null, "@Map"));
+        assertFalse( TagUtil.isEscapedTag( "", "@Map"));
+        assertFalse( TagUtil.isEscapedTag( "\\@Map", null));
+        assertFalse( TagUtil.isEscapedTag( "\\@Map", ""));
+        assertEquals( null, TagUtil.escapeTag( null, "@Map"));
+        assertEquals( "", TagUtil.escapeTag( "", "@Map"));
+        assertEquals( "\\@Map", TagUtil.escapeTag( "\\@Map", null));
+        assertEquals( "\\@Map", TagUtil.escapeTag( "\\@Map", ""));
+        assertEquals( null, TagUtil.unescapeTag( null, "@Map"));
+        assertEquals( "", TagUtil.unescapeTag( "", "@Map"));
+    }
+
+    private String repeatBackslashes( int count) {
+        StringBuilder result = new StringBuilder();
+        for ( int i = 0; i < count; i++) {
+            result.append( TagParser.TAG_ESCAPE);
+        }
+        return result.toString();
     }
 }

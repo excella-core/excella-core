@@ -28,7 +28,11 @@ import org.bbreak.excella.core.tag.TagParser;
 
 /**
  * タグ定義操作ユーティリティ
- * 
+ *
+ * タグ名の先頭にあるバックスラッシュはエスケープ文字として予約されており、タグ名には使用できません。
+ * エスケープ系ヘルパー（<code>isEscapedTag</code>、<code>escapeTag</code>、<code>unescapeTag</code>）では、
+ * tagParamPrefixにnullを指定できません。空文字の場合はタグに一致しません。
+ *
  * @since 1.0
  */
 public class TagUtil {
@@ -135,6 +139,101 @@ public class TagUtil {
             return tagDef;
         }
         return tagDef.substring( 0, paramStartIdx);
+    }
+
+    /**
+     * タグ定義がエスケープされているかどうかを判定する
+     *
+     * @param tagDef タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @return タグ定義がエスケープされている場合はTrue
+     */
+    public static boolean isEscapedTag( String tagDef, String tag) {
+        return isEscapedTag( tagDef, tag, TagParser.TAG_PARAM_PREFIX);
+    }
+
+    /**
+     * タグ定義がエスケープされているかどうかを判定する
+     *
+     * @param tagDef タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
+     * @return タグ定義がエスケープされている場合はTrue
+     */
+    public static boolean isEscapedTag( String tagDef, String tag, String tagParamPrefix) {
+        if ( tagDef == null || tag == null || tag.isEmpty() || !tagDef.startsWith( TagParser.TAG_ESCAPE)) {
+            return false;
+        }
+
+        String tagName = getTag( tagDef, tagParamPrefix);
+        int escapeLength = getLeadingEscapeLength( tagName);
+        return escapeLength > 0 && tagName.substring( escapeLength).equals( tag);
+    }
+
+    /**
+     * タグ定義をエスケープする
+     *
+     * @param value タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @return エスケープ後のタグ定義
+     */
+    public static String escapeTag( String value, String tag) {
+        return escapeTag( value, tag, TagParser.TAG_PARAM_PREFIX);
+    }
+
+    /**
+     * タグ定義をエスケープする
+     *
+     * @param value タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
+     * @return エスケープ後のタグ定義
+     */
+    public static String escapeTag( String value, String tag, String tagParamPrefix) {
+        if ( value == null || tag == null || tag.isEmpty()) {
+            return value;
+        }
+
+        String tagName = getTag( value, tagParamPrefix);
+        int escapeLength = getLeadingEscapeLength( tagName);
+        if ( tagName.substring( escapeLength).equals( tag)) {
+            return TagParser.TAG_ESCAPE + value;
+        }
+        return value;
+    }
+
+    /**
+     * タグ定義のエスケープを解除する
+     *
+     * @param value タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @return エスケープ解除後のタグ定義
+     */
+    public static String unescapeTag( String value, String tag) {
+        return unescapeTag( value, tag, TagParser.TAG_PARAM_PREFIX);
+    }
+
+    /**
+     * タグ定義のエスケープを解除する
+     *
+     * @param value タグ定義
+     * @param tag 対象タグ（先頭のバックスラッシュはエスケープ文字として予約）
+     * @param tagParamPrefix タグのパラメータ開始文字（null不可。空文字の場合は一致しない）
+     * @return エスケープ解除後のタグ定義
+     */
+    public static String unescapeTag( String value, String tag, String tagParamPrefix) {
+        if ( isEscapedTag( value, tag, tagParamPrefix)) {
+            return value.substring( TagParser.TAG_ESCAPE.length());
+        }
+        return value;
+    }
+
+    private static int getLeadingEscapeLength( String value) {
+        int escapeLength = 0;
+        while ( value.startsWith( TagParser.TAG_ESCAPE, escapeLength)) {
+            escapeLength += TagParser.TAG_ESCAPE.length();
+        }
+        return escapeLength;
     }
 
     /**
